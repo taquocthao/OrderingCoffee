@@ -2,4 +2,5 @@
 <resources>
     <dimen name="size20">20dp</dimen>
     <dimen name="size18">18dp</dimen>
+    <dimen name="size250">250dp</dimen>
 </resources>

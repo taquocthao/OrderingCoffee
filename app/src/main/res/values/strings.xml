@@ -3,4 +3,5 @@
     <string name="introduce_login1">Nhập số ĐT để nhận được mật khẩu.</string>
     <string name="introduce_login2">Ứng dụng sẽ tự động đăng nhập các lần tiếp theo.</string>
     <string name="policy">Tôi đã đọc và đồng ý với chính sách bảo mật</string>
+    <string name="getPassWord">Lấy mật khẩu</string>
 </resources>
