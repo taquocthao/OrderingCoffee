@@ -4,46 +4,66 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.tathao.orderingcoffee.LoginActivity"
     android:background="@color/lightGreen"
-    android:weightSum="4">
+    android:orientation="vertical"
+    android:weightSum="4"
+    tools:context="com.tathao.orderingcoffee.LoginActivity">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_margin="15dp">
+        android:layout_margin="@dimen/size15"
+        android:orientation="vertical">
 
 
-        <EditText
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Tên đăng nhập"
-            android:textColorHint="@color/lightGrey"
-            android:layout_marginTop="@dimen/size20"
-            android:drawableLeft="@drawable/user"
-            android:drawablePadding="10dp"/>
-        <EditText
+            android:layout_marginTop="@dimen/size20">
+
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:hint="Tên đăng nhập"
+                android:singleLine="true"
+                android:textColorHint="@color/lightGrey" />
+
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Mật khẩu"
-            android:textColorHint="@color/lightGrey"
             android:layout_marginTop="@dimen/size20"
-            android:drawableLeft="@drawable/password"
-            android:drawablePadding="10dp"/>
+            app:passwordToggleEnabled="true">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size20"
+
+                android:hint="Mật khẩu"
+                android:password="true"
+                android:singleLine="true"
+                android:textColorHint="@color/lightGrey" />
+        </android.support.design.widget.TextInputLayout>
+
+
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ghi nhớ đăng nhập"
-            android:layout_marginTop="@dimen/size20"/>
+            android:layout_marginTop="@dimen/size20"
+            android:text="Ghi nhớ đăng nhập" />
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Đăng nhập"
             android:layout_marginTop="@dimen/size20"
-            android:background="@drawable/custom_button"/>
+            android:background="@drawable/custom_backbround_button"
+            android:text="Đăng nhập" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,12 +75,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Chưa có tài làm khoản? " />
+
             <TextView
+                android:id="@+id/txtSignUp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:linksClickable="true"
                 android:text="Đăng ký ngay"
-                android:textStyle="bold|italic"
-                android:linksClickable="true"/>
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
 
@@ -76,7 +98,7 @@
                 android:layout_height="1dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="#000000">
+                android:background="@color/black">
 
             </View>
 
@@ -84,15 +106,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text=" or "
-                android:gravity="center"/>
+                android:gravity="center"
+                android:text=" or " />
 
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="#000000">
+                android:background="@color/black">
 
             </View>
 
@@ -102,20 +124,22 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Đăng nhập bằng tài khoản facebook"
             android:layout_marginTop="@dimen/size20"
-            android:background="@drawable/custom_button"
+            android:background="@drawable/custom_backbround_button"
             android:drawableLeft="@drawable/facebook"
-            android:paddingLeft="@dimen/size20"/>
+            android:paddingLeft="@dimen/size15"
+            android:text="Đăng nhập bằng facebook"
+            android:textAlignment="center" />
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Đăng nhập bằng tài khoản google"
-            android:layout_marginTop="@dimen/size20"
-            android:background="@drawable/custom_button"
+            android:layout_marginTop="@dimen/size15"
+            android:background="@drawable/custom_backbround_button"
             android:drawableLeft="@drawable/google"
-            android:paddingLeft="@dimen/size20"/>
-
+            android:paddingLeft="@dimen/size15"
+            android:text="Đăng nhập bằng google"
+            android:textAlignment="center" />
 
     </LinearLayout>
 
