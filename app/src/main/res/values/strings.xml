@@ -4,4 +4,26 @@
     <string name="introduce_login2">Ứng dụng sẽ tự động đăng nhập các lần tiếp theo.</string>
     <string name="policy">Tôi đã đọc và đồng ý với chính sách bảo mật</string>
     <string name="getPassWord">Lấy mật khẩu</string>
+    <string name="fontArial">Arial</string>
+    <string name="username">Tên đăng nhập</string>
+    <string name="password">Mật khẩu</string>
+    <string name="re_enter_password">Nhập lại mật khẩu</string>
+    <string name="remember_password">Ghi nhớ đăng nhập</string>
+    <string name="login">Đăng nhập</string>
+    <string name="login_with_facebook">facebook</string>
+    <string name="login_with_google">google</string>
+    <string name="forget_password">Quên mật khẩu</string>
+    <string name="phone_or_mail">Số điện thoại hoặc email</string>
+    <string name="next">Tiếp tục</string>
+    <string name="cancel">Hủy</string>
+    <string name="new_password">Mật khẩu mới</string>
+    <string name="reenter_new_password">Nhập lại mật khẩu mới</string>
+    <string name="change_password">Đổi mật khẩu</string>
+    <string name="exit">Thoát</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

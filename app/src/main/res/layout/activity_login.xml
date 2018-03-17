@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/lightGreen"
     android:orientation="vertical"
-    android:weightSum="4"
     tools:context="com.tathao.orderingcoffee.LoginActivity">
 
 
@@ -14,137 +13,196 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/size15"
-        android:orientation="vertical">
-
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/size20">
-
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:hint="Tên đăng nhập"
-                android:singleLine="true"
-                android:textColorHint="@color/lightGrey" />
-
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/size20"
-            app:passwordToggleEnabled="true">
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/size20"
-
-                android:hint="Mật khẩu"
-                android:password="true"
-                android:singleLine="true"
-                android:textColorHint="@color/lightGrey" />
-        </android.support.design.widget.TextInputLayout>
-
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/size20"
-            android:text="Ghi nhớ đăng nhập" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/size20"
-            android:background="@drawable/custom_backbround_button"
-            android:text="Đăng nhập" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/size20"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Chưa có tài làm khoản? " />
-
-            <TextView
-                android:id="@+id/txtSignUp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:linksClickable="true"
-                android:text="Đăng ký ngay"
-                android:textStyle="bold|italic" />
-        </LinearLayout>
+        android:orientation="horizontal">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/size20"
-            android:weightSum="2">
+            android:orientation="vertical">
 
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="@color/black">
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            </View>
+                <EditText
+                    android:id="@+id/edUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@string/fontArial"
+                    android:hint="@string/username"
+                    android:singleLine="true"
+                    android:textColorHint="@color/lightGrey" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size15"
+                app:passwordToggleEnabled="true">
+
+                <EditText
+                    android:id="@+id/edPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@string/fontArial"
+                    android:hint="@string/password"
+                    android:password="true"
+                    android:singleLine="true"
+                    android:textColorHint="@color/lightGrey" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size15"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="2">
+
+                    <CheckBox
+                        android:id="@+id/ckRememberPassword"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@string/fontArial"
+                        android:text="@string/remember_password" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:id="@+id/btnLogin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/custom_backbround_button"
+                        android:fontFamily="@string/fontArial"
+                        android:text="@string/login" />
+                </LinearLayout>
+
+            </LinearLayout>
+
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text=" or " />
+                android:layout_marginTop="@dimen/size20"
+                android:fontFamily="@string/fontArial"
+                android:text="@string/forget_password"
+                android:textStyle="bold" />
 
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="@color/black">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size20"
+                android:gravity="center">
 
-            </View>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@string/fontArial"
+                    android:text="Chưa có tài làm khoản? " />
+
+                <TextView
+                    android:id="@+id/tvSignUp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@string/fontArial"
+                    android:linksClickable="true"
+                    android:text="Đăng ký ngay"
+                    android:textStyle="bold|italic" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/size20"
+                android:weightSum="2">
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@color/black">
+
+                </View>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@string/fontArial"
+                    android:gravity="center"
+                    android:text=" or " />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@color/black">
+
+                </View>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size20"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/btnLoginWithFacebook"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="3dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_backbround_button"
+                    android:drawableLeft="@drawable/facebook"
+                    android:fontFamily="@string/fontArial"
+                    android:paddingLeft="@dimen/size15"
+                    android:text="@string/login_with_facebook"
+                    android:textAlignment="center" />
+
+                <Button
+                    android:id="@+id/btnLoginWithGoole"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_backbround_button"
+                    android:drawableLeft="@drawable/google"
+                    android:fontFamily="@string/fontArial"
+                    android:paddingLeft="@dimen/size15"
+                    android:text="@string/login_with_google"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
 
 
         </LinearLayout>
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/size20"
-            android:background="@drawable/custom_backbround_button"
-            android:drawableLeft="@drawable/facebook"
-            android:paddingLeft="@dimen/size15"
-            android:text="Đăng nhập bằng facebook"
-            android:textAlignment="center" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/size15"
-            android:background="@drawable/custom_backbround_button"
-            android:drawableLeft="@drawable/google"
-            android:paddingLeft="@dimen/size15"
-            android:text="Đăng nhập bằng google"
-            android:textAlignment="center" />
 
     </LinearLayout>
 
 
-
-
-
-</LinearLayout>
+</RelativeLayout>
