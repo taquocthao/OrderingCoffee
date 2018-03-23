@@ -10,4 +10,7 @@
     <color name="black">#000000</color>
     <color name="colorHint">#757575</color>
     <color name="colorYellow">#FFEB3B</color>
+    <color name="colorRed">#D50000</color>
+    <color name="colorBlueGrey">#37474f</color>
+    <color name="colorWhite">#ffffff</color>
 </resources>

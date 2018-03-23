@@ -116,7 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/size15"
-            android:background="@drawable/custom_backbround_button"
+            android:background="@drawable/background_button_login"
             android:text="Tạo tài khoản" />
 
     </LinearLayout>
