@@ -2,6 +2,8 @@
     <string name="app_name">OrderingCoffee</string>
     <string name="facebook_app_id">186102645339113</string>
     <string name="fb_login_protocol_scheme">fb186102645339113</string>
+    <string name="server_client_id">319718400159-4r3f3up2m1c7mpjva74ko193hqgv76e8.apps.googleusercontent.com</string>
+
     <string name="introduce_login1">Nhập số ĐT để nhận được mật khẩu.</string>
     <string name="introduce_login2">Ứng dụng sẽ tự động đăng nhập các lần tiếp theo.</string>
     <string name="policy">Tôi đã đọc và đồng ý với chính sách bảo mật</string>

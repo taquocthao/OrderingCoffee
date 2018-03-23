@@ -1,5 +1,6 @@
 package com.tathao.orderingcoffee;
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -13,9 +14,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.tathao.orderingcoffee.FragmentApp.HomePage;
+import com.tathao.orderingcoffee.FragmentApp.ProfileUser;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+
+    //private FragmentManager fragmentManager;
+
+    private android.app.FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +51,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        fragmentManager = getFragmentManager();
     }
 
     @Override
@@ -84,12 +95,23 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            // Handle the camera action
+            //add fragment home page to content main
+            android.app.FragmentTransaction transactionHomePage = fragmentManager.beginTransaction();
+            HomePage fragmentHomePage = new HomePage();
+            transactionHomePage.replace(R.id.content, fragmentHomePage);
+            transactionHomePage.commit();
+
         } else if (id == R.id.nav_order_history) {
+
 
         } else if (id == R.id.nav_favorite_oder) {
 
         } else if (id == R.id.nav_profile) {
+            // add fragment profile user to content main
+            FragmentTransaction transactionProfile = fragmentManager.beginTransaction();
+            ProfileUser profileUser = new ProfileUser();
+            transactionProfile.replace(R.id.content, profileUser, "Profile");
+            transactionProfile.commit();
 
         } else if (id == R.id.nav_checkin) {
 

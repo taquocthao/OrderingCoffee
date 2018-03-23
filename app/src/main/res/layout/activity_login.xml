@@ -170,26 +170,21 @@
                 android:orientation="horizontal"
                 android:weightSum="2">
 
-                <com.facebook.login.widget.LoginButton
-                    android:id="@+id/login_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="30dp"
-                    android:layout_marginTop="30dp" />
-
-                <Button
-                    android:id="@+id/btnLoginWithGoole"
+                <com.google.android.gms.common.SignInButton
+                    android:id="@+id/sign_in_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
+                    android:layout_weight="1" />
+
+                <com.facebook.login.widget.LoginButton
+                    android:id="@+id/login_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="4dp"
                     android:layout_weight="1"
-                    android:background="@drawable/custom_backbround_button"
-                    android:drawableLeft="@drawable/google"
-                    android:fontFamily="@string/fontArial"
-                    android:paddingLeft="@dimen/size15"
-                    android:text="@string/login_with_google"
-                    android:textAlignment="center" />
+                    android:paddingBottom="11dp"
+                    android:paddingTop="10dp"
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
