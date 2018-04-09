@@ -11,15 +11,13 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:background="@drawable/side_nav_bar"
+            android:layout_height="150dp"
             android:orientation="vertical">
 
             <ImageView
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/size5"
                 android:background="@mipmap/ic_launcher" />
 
             <TextView
@@ -28,7 +26,6 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/size10"
                 android:text="User name" />
-
         </LinearLayout>
 
         <ScrollView
@@ -41,170 +38,77 @@
                 android:layout_marginTop="@dimen/size15"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/size60"
-                    android:layout_margin="5dp"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginTop="3dp"
-                    android:background="@drawable/backbround_button_white"
-                    android:elevation="4dp"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/edFullName"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@null"
-                        android:drawableLeft="@drawable/user"
-                        android:drawablePadding="@dimen/size10"
-                        android:padding="@dimen/size10"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/size60"
-                    android:layout_margin="5dp"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginTop="3dp"
-                    android:background="@drawable/backbround_button_white"
-                    android:elevation="4dp"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/edPhoneNumber"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@null"
-                        android:drawableLeft="@drawable/phone"
-                        android:drawablePadding="@dimen/size10"
-                        android:padding="@dimen/size10"
-                        android:phoneNumber="true"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/size60"
-                    android:layout_margin="5dp"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginTop="3dp"
-                    android:background="@drawable/backbround_button_white"
-                    android:elevation="4dp"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/edEmail"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@null"
-                        android:drawableLeft="@drawable/gmail"
-                        android:drawablePadding="@dimen/size10"
-                        android:padding="@dimen/size10"
-                        android:singleLine="true"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/size60"
-                    android:layout_margin="5dp"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginTop="3dp"
-                    android:background="@drawable/backbround_button_white"
-                    android:elevation="4dp"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/edBirthDay"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@null"
-                        android:clickable="true"
-                        android:drawableLeft="@drawable/birthday"
-                        android:drawablePadding="@dimen/size10"
-                        android:editable="false"
-                        android:padding="@dimen/size10"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/size60"
+                    android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:layout_marginBottom="3dp"
                     android:layout_marginTop="3dp"
                     android:background="#fff"
+                    android:clickable="true"
                     android:elevation="4dp"
-                    android:orientation="horizontal">
+                    android:padding="@dimen/size20"
+                    android:text="Email" />
 
-                    <RadioGroup
-                        android:id="@+id/rdGender"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            android:id="@+id/rdMale"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/size35"
-                            android:text="Nam" />
-
-                        <RadioButton
-                            android:id="@+id/rbFemale"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Nữ" />
-
-                    </RadioGroup>
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/size60"
+                    android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:layout_marginBottom="3dp"
                     android:layout_marginTop="3dp"
-                    android:background="@drawable/backbround_button_white"
+                    android:background="#fff"
+                    android:clickable="true"
                     android:elevation="4dp"
-                    android:orientation="horizontal">
+                    android:padding="@dimen/size20"
+                    android:text="Phone" />
 
-                    <EditText
-                        android:id="@+id/edAddress"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@null"
-                        android:drawableLeft="@drawable/address"
-                        android:drawablePadding="@dimen/size10"
-                        android:padding="@dimen/size10"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/btnSaveProfile"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/size5"
-                    android:layout_marginTop="@dimen/size10"
-                    android:background="@drawable/background_button_login"
-                    android:text="Save" />
+                    android:layout_margin="5dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="#fff"
+                    android:clickable="true"
+                    android:elevation="4dp"
+                    android:padding="@dimen/size20"
+                    android:text="Gender" />
 
-                <Button
-                    android:id="@+id/btnUpdateProfile"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/size5"
-                    android:layout_marginTop="@dimen/size10"
-                    android:background="@drawable/background_button_login"
-                    android:text="Update" />
+                    android:layout_margin="5dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="#fff"
+                    android:clickable="true"
+                    android:elevation="4dp"
+                    android:padding="@dimen/size20"
+                    android:text="Address" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="#fff"
+                    android:clickable="true"
+                    android:elevation="4dp"
+                    android:padding="@dimen/size20"
+                    android:text="Point" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="#fff"
+                    android:clickable="true"
+                    android:elevation="4dp"
+                    android:padding="@dimen/size20"
+                    android:text="Address" />
             </LinearLayout>
 
         </ScrollView>
