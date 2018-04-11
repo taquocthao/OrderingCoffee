@@ -31,10 +31,22 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:0.5'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation "com.android.support:design:26.1.0"
 
-    compile "com.android.support:design:26.1.0"
-    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    // thư viện đăng nhập facebook
+    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
     implementation 'com.facebook.android:facebook-login:[4,5)'
-    compile 'com.google.android.gms:play-services-auth:11.8.0'
+    // thư viện google login
+    implementation 'com.google.android.gms:play-services-auth:11.8.0'
+    // add thư viện đọc barcode
+    implementation('com.journeyapps:zxing-android-embedded:3.6.0') { transitive = false }
+    //okHttp
+    implementation 'com.squareup.okhttp3:okhttp:3.2.0'
+    // recylerView
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    //thư viện picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    //circle imageView
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 
 }

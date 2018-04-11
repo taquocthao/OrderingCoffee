@@ -1,6 +1,7 @@
 package com.tathao.orderingcoffee;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,10 +13,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.squareup.picasso.Picasso;
+import com.tathao.orderingcoffee.DAO.LoginWithFacebook;
 import com.tathao.orderingcoffee.FragmentApp.HomePage;
 import com.tathao.orderingcoffee.FragmentApp.ProfileUser;
 import com.tathao.orderingcoffee.InterfaceHandler.AddFragment;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AddFragment {
@@ -29,16 +41,41 @@ public class MainActivity extends AppCompatActivity
 
     private FloatingActionButton fab;
 
+    private ImageView imgUser;
+    private TextView tvName, tvMail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         init();
+
+        //Kiểm tra kiểu đăng nhập
+
+        Intent intent = getIntent();
+        int type = intent.getIntExtra("typeLogin", 0);
+        // đăng nhập bằng tài khoản đăng ký
+        if (type == 1) {
+            Toast.makeText(getApplicationContext(), "Bạn đã đăng nhập bằng tài đăng ký\nvui lòng thử đăng nhập lại", Toast.LENGTH_LONG).show();
+        } else if (type == 2) { // đăng nhập bằng facebook
+
+            LoginWithFacebook loginWithFacebook = new LoginWithFacebook();
+            AccessToken accessToken = loginWithFacebook.getAccessTokenUser();
+            setProfileNavigationFromFacebook(accessToken);
+
+        } else if (type == 3) { // đăng nhập bằng google
+
+        } else {
+            Toast.makeText(getApplicationContext(), "Có lỗi xảy ra\nvui lòng thử đăng nhập lại", Toast.LENGTH_LONG).show();
+        }
+
+
     }
 
     //hàm khai báo và khởi tạo
     private void init() {
+
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Trang chủ");
         setSupportActionBar(toolbar);
@@ -51,6 +88,10 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
+        View viewNav = navigationView.getHeaderView(0);
+        imgUser = viewNav.findViewById(R.id.imgProfile);
+        tvName = viewNav.findViewById(R.id.tvNameInNavHeader);
+        tvMail = viewNav.findViewById(R.id.tvEmailInNavHeader);
         navigationView.setNavigationItemSelectedListener(this);
 
         fragmentManager = getFragmentManager();
@@ -69,6 +110,35 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+    }
+
+
+    private void setProfileNavigationFromFacebook(AccessToken accessToken) {
+
+        GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
+            @Override
+            public void onCompleted(JSONObject object, GraphResponse response) {
+                try {
+                    String id = object.getString("id");
+                    String name = object.getString("name");
+                    String email = object.getString("email");
+
+                    tvName.setText(name);
+                    tvMail.setText(email);
+                    Picasso.get()
+                            .load("https://graph.facebook.com/" + id + "/picture?type=small")
+                            .into(imgUser);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,name,email");
+        request.setParameters(parameters);
+        request.executeAsync();
     }
 
 
@@ -148,5 +218,6 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
         toolbar.setTitle(title);
     }
+
 
 }
