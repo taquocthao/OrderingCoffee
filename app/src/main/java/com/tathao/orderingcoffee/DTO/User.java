@@ -11,7 +11,6 @@ public class User {
 
     public User() {
         this.id = null;
-
         this.name = null;
         this.birthday = null;
         this.gender = null;
@@ -21,6 +20,7 @@ public class User {
     }
 
     public User(String id, String name, String gender, String birthday, String phoneNumber, String email, String address) {
+        this.id = id;
         this.name = name;
         this.birthday = birthday;
         this.gender = gender;

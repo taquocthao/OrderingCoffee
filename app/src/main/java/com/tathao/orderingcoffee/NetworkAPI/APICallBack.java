@@ -1,4 +1,4 @@
-package com.tathao.orderingcoffee.APIHandler;
+package com.tathao.orderingcoffee.NetworkAPI;
 
 /**
  * Created by USER on 3/28/2018.

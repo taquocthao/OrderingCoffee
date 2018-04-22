@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/size100">
+
+    <LinearLayout
+        android:id="@+id/item_category_food"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/size10"
+        android:background="@drawable/background_item_list"
+        android:gravity="center">
+
+
+        <TextView
+            android:id="@+id/tvNameCategoryFood"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="food name"
+            android:textColor="@color/black" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

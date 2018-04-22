@@ -32,6 +32,7 @@
             app:passwordToggleEnabled="true">
 
             <EditText
+                android:id="@+id/sign_up_fullname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="Arial"
@@ -49,6 +50,7 @@
             android:layout_marginTop="@dimen/size15">
 
             <EditText
+                android:id="@+id/sign_up_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="Arial"
@@ -68,7 +70,7 @@
             app:passwordToggleEnabled="true">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/etPassword"
+                android:id="@+id/sign_up_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Mật khẩu"
@@ -85,7 +87,7 @@
             app:passwordToggleEnabled="true">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/etRe_EnterPassword"
+                android:id="@+id/sign_up__retype_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nhập lại mật khẩu"
@@ -100,6 +102,7 @@
             android:layout_marginTop="@dimen/size15">
 
             <EditText
+                android:id="@+id/sign_up_number_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="Arial"
@@ -112,7 +115,7 @@
 
 
         <Button
-            android:id="@+id/btnCreateAccount"
+            android:id="@+id/sign_up_button_create_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/size15"

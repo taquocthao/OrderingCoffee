@@ -1,8 +1,12 @@
 package com.tathao.orderingcoffee;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -11,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,14 +25,29 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
 import com.squareup.picasso.Picasso;
-import com.tathao.orderingcoffee.DAO.LoginWithFacebook;
+import com.tathao.orderingcoffee.DAO.LoginHandler;
+import com.tathao.orderingcoffee.DTO.User;
 import com.tathao.orderingcoffee.FragmentApp.HomePage;
 import com.tathao.orderingcoffee.FragmentApp.ProfileUser;
 import com.tathao.orderingcoffee.InterfaceHandler.AddFragment;
+import com.tathao.orderingcoffee.NetworkAPI.Config;
+import com.tathao.orderingcoffee.NetworkAPI.OkHttpHandler;
+import com.tathao.orderingcoffee.NetworkAPI.UserDataStore;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AddFragment {
@@ -43,6 +63,13 @@ public class MainActivity extends AppCompatActivity
 
     private ImageView imgUser;
     private TextView tvName, tvMail;
+    private Menu nav_menu;
+
+    private AccessToken accessToken;
+    private int typeLogin = 0;
+    private LoginHandler loginHandler;
+    private UserDataStore store;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,18 +81,27 @@ public class MainActivity extends AppCompatActivity
         //Kiểm tra kiểu đăng nhập
 
         Intent intent = getIntent();
-        int type = intent.getIntExtra("typeLogin", 0);
-        // đăng nhập bằng tài khoản đăng ký
-        if (type == 1) {
-            Toast.makeText(getApplicationContext(), "Bạn đã đăng nhập bằng tài đăng ký\nvui lòng thử đăng nhập lại", Toast.LENGTH_LONG).show();
-        } else if (type == 2) { // đăng nhập bằng facebook
+        typeLogin = intent.getIntExtra("typeLogin", 0);
 
-            LoginWithFacebook loginWithFacebook = new LoginWithFacebook();
-            AccessToken accessToken = loginWithFacebook.getAccessTokenUser();
+        if (typeLogin == 1) {// đăng nhập bằng tài khoản đăng ký
+            // lấy thông tin user
+            try {
+                setProfileNavigationFromLoginWithAccount();
+
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else if (typeLogin == 2) { // đã đăng nhập bằng facebook
+            accessToken = loginHandler.getAccessTokenUserFacebook();
             setProfileNavigationFromFacebook(accessToken);
 
-        } else if (type == 3) { // đăng nhập bằng google
-
+        } else if (typeLogin == 3) { // đã đăng nhập bằng google
+            setProfileNavigationFromGoogle();
         } else {
             Toast.makeText(getApplicationContext(), "Có lỗi xảy ra\nvui lòng thử đăng nhập lại", Toast.LENGTH_LONG).show();
         }
@@ -77,28 +113,64 @@ public class MainActivity extends AppCompatActivity
     private void init() {
 
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Trang chủ");
+        toolbar.setTitle(getString(R.string.home));
         setSupportActionBar(toolbar);
         fab = findViewById(R.id.fab);
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onClick(View view) {
+                if(getFragmentManager().getBackStackEntryCount() >= 2){
+
+                    getFragmentManager().popBackStack(getString(R.string.food_page), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    getSupportActionBar().setTitle(getString(R.string.category));
+                }
+                else if(getFragmentManager().getBackStackEntryCount() == 1){
+
+                    getFragmentManager().popBackStack(getString(R.string.food_category_page), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    getSupportActionBar().setTitle(getString(R.string.home));
+                    //remove back button
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                    // show hamburger button
+                    toggle.setDrawerIndicatorEnabled(true);
+                    toggle.syncState();
+
+                }
+                else
+                    drawer.openDrawer(GravityCompat.START);
+              //  Log.d("count", getFragmentManager().getBackStackEntryCount()+"");
+            }
+        });
+
+
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         View viewNav = navigationView.getHeaderView(0);
         imgUser = viewNav.findViewById(R.id.imgProfile);
         tvName = viewNav.findViewById(R.id.tvNameInNavHeader);
         tvMail = viewNav.findViewById(R.id.tvEmailInNavHeader);
+        nav_menu = navigationView.getMenu();
+
         navigationView.setNavigationItemSelectedListener(this);
+
+        loginHandler = new LoginHandler();
+
+        store = new UserDataStore(getApplicationContext());
 
         fragmentManager = getFragmentManager();
 
         //add fragment home page to content main
         HomePage fragmentHomePage = new HomePage();
-        addFragment(fragmentHomePage, "Trang chủ");
+        addFragment(fragmentHomePage, getString(R.string.home));
         navigationView.setCheckedItem(R.id.nav_home);
 
         fab.setVisibility(View.GONE);
@@ -113,6 +185,24 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    private void setProfileNavigationFromLoginWithAccount() throws ExecutionException, InterruptedException, IOException {
+        String url = Config.urlUserInfor;
+        String jsonUser = new OkHttpHandler(url, OkHttpHandler.GET, null, getApplicationContext())
+                .execute()
+                .get().toString();
+        //Log.d("jsonUser", jsonUser);
+        // ánh xạ chuỗi json về đối tượng user bằng thư viện moshi
+        Moshi moshi = new Moshi.Builder().build();
+        JsonAdapter<User> userJsonAdapter = moshi.adapter(User.class);
+        User user = userJsonAdapter.fromJson(jsonUser);
+        //Picasso.get().load("")
+        String name = user.getName();
+        String email = user.getEmail();
+        tvName.setText(name);
+        tvMail.setText(email);
+
+    }
+
     private void setProfileNavigationFromFacebook(AccessToken accessToken) {
 
         GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
@@ -126,7 +216,7 @@ public class MainActivity extends AppCompatActivity
                     tvName.setText(name);
                     tvMail.setText(email);
                     Picasso.get()
-                            .load("https://graph.facebook.com/" + id + "/picture?type=small")
+                            .load("https://graph.facebook.com/" + id + "/picture?type=large")
                             .into(imgUser);
 
                 } catch (JSONException e) {
@@ -141,6 +231,23 @@ public class MainActivity extends AppCompatActivity
         request.executeAsync();
     }
 
+    private void setProfileNavigationFromGoogle() {
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) {
+            Uri personPhoto = account.getPhotoUrl();
+            Picasso.get().load(personPhoto).into(imgUser);
+
+            String personName = account.getDisplayName();
+            tvName.setText(personName);
+
+            String personEmail = account.getEmail();
+            tvMail.setText(personEmail);
+
+            nav_menu.findItem(R.id.nav_checkin).setVisible(false);
+            nav_menu.findItem(R.id.nav_chat).setVisible(false);
+
+        }
+    }
 
     @Override
     public void onBackPressed() {
@@ -152,26 +259,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -204,11 +291,35 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send_fellback) {
 
+        } else if (id == R.id.nav_logout) {
+            if (typeLogin == 1) {
+                store.destroyToken();
+                BackToLoginPage();
+            } else if (typeLogin == 2) {
+                //loginHandler.destroyAccessTokenFacebook();
+                LoginManager.getInstance().logOut();
+                BackToLoginPage();
+            } else if (typeLogin == 3) {
+                GoogleSignInClient mGoogleSignInClient = loginHandler.getmGoogleSignInClient(getApplicationContext());
+                mGoogleSignInClient.signOut()
+                        .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                BackToLoginPage();
+                            }
+                        });
+            }
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void BackToLoginPage() {
+        Intent i = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(i);
+        finish();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.tathao.orderingcoffee.APIHandler;
+package com.tathao.orderingcoffee.NetworkAPI;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -26,7 +26,7 @@ public class OkHttpHandler extends AsyncTask {
     OkHttpClient client;
     HashMap<String, String> params;
     Context context;
-    UserData userDataStore;
+    UserDataStore userDataStoreStore;
     private String url, method, result = "";
 
 
@@ -35,7 +35,7 @@ public class OkHttpHandler extends AsyncTask {
         this.method = method;
         this.params = params;
         this.context = context;
-        this.userDataStore = new UserData(context);
+        this.userDataStoreStore = new UserDataStore(context);
         client = new OkHttpClient();
     }
 
@@ -71,10 +71,10 @@ public class OkHttpHandler extends AsyncTask {
     public void performGet(APICallBack callBack) throws IOException {
 
         Request request;
-        if (userDataStore.isAuthenticaed()) {
+        if (userDataStoreStore.isAuthenticaed()) {
             request = new Request.Builder()
                     .url(this.url)
-                    .header("Authorization", "" + new UserData(this.context).getToken())
+                    .header("Authorization", "Bearer " + new UserDataStore(this.context).getToken())
                     .build();
         } else {
             request = new Request.Builder()
@@ -95,10 +95,10 @@ public class OkHttpHandler extends AsyncTask {
         }
         RequestBody requestBody = formBuilder.build();
         Request request;
-        if (userDataStore.isAuthenticaed()) {
+        if (userDataStoreStore.isAuthenticaed()) {
             request = new Request.Builder()
                     .url(this.url)
-                    .header("Authorization", "" + new UserData(this.context).getToken())
+                    .header("Authorization", "Bearer " + new UserDataStore(this.context).getToken())
                     .post(requestBody)
                     .build();
         } else {

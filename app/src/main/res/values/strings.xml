@@ -32,4 +32,22 @@
     <string name="action_settings">Settings</string>
     <string name="action_search">Search</string>
     <string name="menu_shopping_cart">shopping cart</string>
+
+    <!--title-->
+    <string name="home">Trang chủ</string>
+    <string name="category">Danh mục</string>
+    <string name="menu">Thực đơn</string>
+    <string name="recent_order">Lịch sử gọi món</string>
+    <string name="profile">Thông tin cá nhân</string>
+
+    <!--pop_back_stack-->
+    <string name="food_page">foodpage</string>
+    <string name="food_category_page">categoryfoodpage</string>
+
+    <!--Error message-->
+    <string name="invalid_code">Mã không hợp lệ</string>
+    <string name="cannot_find_code">Không tìm thấy mã</string>
+    
+    <!--message-->
+    <string name="desciption_show">Description</string>
 </resources>

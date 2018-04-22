@@ -1,4 +1,4 @@
-package com.tathao.orderingcoffee.APIHandler;
+package com.tathao.orderingcoffee.NetworkAPI;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,11 +11,11 @@ import org.json.JSONObject;
  * Created by USER on 3/28/2018.
  */
 
-public class UserData {
+public class UserDataStore {
     private SharedPreferences preferences;
     private boolean isAuthenticaed;
 
-    public UserData(Context context) {
+    public UserDataStore(Context context) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
@@ -62,6 +62,12 @@ public class UserData {
     public void setUserData(String JSonString) {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("userdata", JSonString);
+        editor.commit();
+    }
+
+    public void destroyToken(){
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
         editor.commit();
     }
 }
