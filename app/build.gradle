@@ -50,7 +50,7 @@ dependencies {
     //circle imageView
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     //httpclient
-    implementation group: 'cz.msebera.android' , name: 'httpclient', version: '4.4.1.1'
+    implementation group: 'cz.msebera.android', name: 'httpclient', version: '4.4.1.1'
     //thư viện moshi - chuyển kiểu json sang java object
     implementation 'com.squareup.moshi:moshi:1.5.0'
     // thư viện custom numberpicker trên github

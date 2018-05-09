@@ -1,7 +1,8 @@
 package com.tathao.orderingcoffee.DTO;
 
-public class FoodCategory {
+import java.util.List;
 
+public class FoodAdapter {
     private String id;
     private String name;
     private String shopID;
@@ -9,18 +10,9 @@ public class FoodCategory {
     private String isDelete;
     private String created_at;
     private String update_at;
+    private List<Food> foods;
 
-    public FoodCategory(){
-        this.id = null;
-        this.name = null;
-        this.shopID = null;
-        this.description = null;
-        this.isDelete = null;
-        this.created_at = null;
-        this.update_at = null;
-    }
-
-    public FoodCategory(String id, String name,String shopID, String description, String isDelete, String created_at, String update_at) {
+    public FoodAdapter(String id, String name, String shopID, String description, String isDelete, String created_at, String update_at, List<Food> foods) {
         this.id = id;
         this.name = name;
         this.shopID = shopID;
@@ -28,30 +20,7 @@ public class FoodCategory {
         this.isDelete = isDelete;
         this.created_at = created_at;
         this.update_at = update_at;
-    }
-
-    public String getIsDelete() {
-        return isDelete;
-    }
-
-    public void setIsDelete(String isDelete) {
-        this.isDelete = isDelete;
-    }
-
-    public String getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(String created_at) {
-        this.created_at = created_at;
-    }
-
-    public String getUpdate_at() {
-        return update_at;
-    }
-
-    public void setUpdate_at(String update_at) {
-        this.update_at = update_at;
+        this.foods = foods;
     }
 
     public String getId() {
@@ -86,4 +55,35 @@ public class FoodCategory {
         this.description = description;
     }
 
+    public String getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(String isDelete) {
+        this.isDelete = isDelete;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
+
+    public String getUpdate_at() {
+        return update_at;
+    }
+
+    public void setUpdate_at(String update_at) {
+        this.update_at = update_at;
+    }
+
+    public List<Food> getFoods() {
+        return foods;
+    }
+
+    public void setFoods(List<Food> foods) {
+        this.foods = foods;
+    }
 }

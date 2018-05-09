@@ -13,15 +13,22 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.tathao.orderingcoffee.DTO.Food;
 import com.tathao.orderingcoffee.DTO.ListFoodAdapter;
+import com.tathao.orderingcoffee.DialogHandler.ItemFoodDialog;
 import com.tathao.orderingcoffee.InterfaceHandler.OnItemRecyclerviewLisener;
+import com.tathao.orderingcoffee.NetworkAPI.Config;
+import com.tathao.orderingcoffee.NetworkAPI.OkHttpHandler;
 import com.tathao.orderingcoffee.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by USER on 3/31/2018.
@@ -32,7 +39,7 @@ public class ListFoodPage extends Fragment implements OnItemRecyclerviewLisener 
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
     private List<Food> foodList;
-
+    private int categoryID = 0;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -45,32 +52,49 @@ public class ListFoodPage extends Fragment implements OnItemRecyclerviewLisener 
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-//        NumberPicker numberPicker = (NumberPicker)view.findViewById(R.id.number_picker);
-//        numberPicker.setUnit(2);
-//        numberPicker.setValue(10);
-
-        //Moshi - chuyển json thành các đối tượng trong food
-//        Moshi moshi = new Moshi.Builder().build();
-//        Type types = Types.newParameterizedType(List.class, Food.class);
-//        JsonAdapter<List<Food>> jsonAdapter = moshi.adapter(types);
-//
-//        String json = "..";
-//        // tạo list food
-//
-//        try {
-//            foodList = jsonAdapter.fromJson(json);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
         foodList = new ArrayList<>();
-        foodList.add(new Food(1, "Pizza", 1, (byte) 0, 50, null));
-        foodList.add(new Food(1, "Pizza", 1, (byte) 0, 50, null));
-        foodList.add(new Food(1, "Pizza", 1, (byte) 0, 50, null));
-        foodList.add(new Food(1, "Pizza", 1, (byte) 0, 50, null));
-        foodList.add(new Food(1, "Pizza", 1, (byte) 0, 50, null));
-        foodList.add(new Food(1, "Pizza", 1, (byte) 0, 50, null));
-        foodList.add(new Food(1, "Pizza", 1, (byte) 0, 50, null));
-        foodList.add(new Food(1, "Pizza", 1, (byte) 0, 50, null));
+
+        if(getArguments() != null){
+            categoryID = getArguments().getInt("id");
+        }
+
+
+        String url = Config.urlFoodes + categoryID;
+        // lấy json từ web service
+        try {
+            String json = new OkHttpHandler(url, OkHttpHandler.GET, null, getActivity().getBaseContext())
+                    .execute().get().toString();
+
+            JSONObject jsonObject = new JSONObject(json);
+//            String id = jsonObject.getString("ID");
+//            String name = jsonObject.getString("Name");
+//            String shop_id = jsonObject.getString("ShopID");
+//            String description = jsonObject.getString("Description");
+//            String isDelete = jsonObject.getString("IsDelete");
+//            String created_at = jsonObject.getString("created_at");
+//            String updated_at = jsonObject.getString("updated_at");
+//            Log.d("aaaa", json);
+            JSONArray jsonArray = jsonObject.getJSONArray("product");
+            for(int i = 0; i <jsonArray.length(); i++){
+                JSONObject object = jsonArray.getJSONObject(i);
+                String id_food = object.getString("ID");
+                String name_food = object.getString("Name");
+                String productCategoryID = object.getString("ProductCategoryID");
+                String img = object.getString("Image");
+                String saleprice = object.getString("SalePrice");
+                String description_food = object.getString("Description");
+
+                Food food = new Food(id_food, name_food, productCategoryID, img, saleprice, description_food);
+                foodList.add(food);
+            }
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         // add list food vào adapter
         ListFoodAdapter adapter = new ListFoodAdapter(foodList, getActivity().getBaseContext(),this);
@@ -107,10 +131,43 @@ public class ListFoodPage extends Fragment implements OnItemRecyclerviewLisener 
     public void onItemClick(View view, int position) {
         int id = view.getId();
         if(id == R.id.layout_item_food){
-            Toast.makeText(getActivity(), "layout press in " + position + "", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "layout press in " + foodID + "", Toast.LENGTH_SHORT).show();
+            try {
+
+                ShowDialogDescriptionFood(position);
+
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         }
         else if(id == R.id.btnAddFoodToList){
-            Toast.makeText(getActivity(), "button press in " + position + "", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "button press in " + position + "", Toast.LENGTH_SHORT).show();
+            String urlAddFood = "";
         }
+    }
+
+    private void ShowDialogDescriptionFood(int position) throws ExecutionException, InterruptedException {
+
+        String id = foodList.get(position).getId();
+        String name = foodList.get(position).getName();
+        String price = foodList.get(position).getPrice();
+        String description = foodList.get(position).getDescription();
+        String image = foodList.get(position).getImage();
+
+
+        ItemFoodDialog itemFoodDialog = new ItemFoodDialog();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("id", id);
+        bundle.putString("name_food", name);
+        bundle.putString("price", price);
+        bundle.putString("description", description);
+        bundle.putString("image", image);
+
+        itemFoodDialog.setArguments(bundle);
+        itemFoodDialog.show(((AppCompatActivity)getActivity()).getSupportFragmentManager(), "dialog description food");
     }
 }

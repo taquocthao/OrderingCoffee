@@ -38,6 +38,7 @@ import com.tathao.orderingcoffee.DAO.LoginHandler;
 import com.tathao.orderingcoffee.DTO.User;
 import com.tathao.orderingcoffee.FragmentApp.HomePage;
 import com.tathao.orderingcoffee.FragmentApp.ProfileUser;
+import com.tathao.orderingcoffee.FragmentApp.ShopingCart;
 import com.tathao.orderingcoffee.InterfaceHandler.AddFragment;
 import com.tathao.orderingcoffee.NetworkAPI.Config;
 import com.tathao.orderingcoffee.NetworkAPI.OkHttpHandler;
@@ -190,12 +191,12 @@ public class MainActivity extends AppCompatActivity
         String jsonUser = new OkHttpHandler(url, OkHttpHandler.GET, null, getApplicationContext())
                 .execute()
                 .get().toString();
-        //Log.d("jsonUser", jsonUser);
+       // Log.d("jsonUser", jsonUser);
         // ánh xạ chuỗi json về đối tượng user bằng thư viện moshi
         Moshi moshi = new Moshi.Builder().build();
         JsonAdapter<User> userJsonAdapter = moshi.adapter(User.class);
         User user = userJsonAdapter.fromJson(jsonUser);
-        //Picasso.get().load("")
+        imgUser.setImageResource(R.drawable.profile_default);
         String name = user.getName();
         String email = user.getEmail();
         tvName.setText(name);
@@ -273,8 +274,8 @@ public class MainActivity extends AppCompatActivity
             addFragment(fragmentHomePage, "Trang chủ");
 
         } else if (id == R.id.nav_order_history) {
-
-            toolbar.setTitle("Lịch sử gọi món");
+            ShopingCart shopingCart = new ShopingCart();
+            addFragment(shopingCart, getString(R.string.recent_order));
         } else if (id == R.id.nav_favorite_oder) {
 
             toolbar.setTitle("Món yêu thích");

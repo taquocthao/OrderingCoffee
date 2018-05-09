@@ -6,15 +6,15 @@ package com.tathao.orderingcoffee.DTO;
 
 public class Food {
 
-    private int id;
+    private String id;
     private String name;
-    private int categoryID;
-    private byte image;
-    private double price;
+    private String categoryID;
+    private String image;
+    private String price;
     private String description;
 
 
-    public Food(int id, String name, int categoryID, byte image, double price, String description) {
+    public Food(String id, String name, String categoryID, String image, String price, String description) {
         this.id = id;
         this.name = name;
         this.categoryID = categoryID;
@@ -25,19 +25,14 @@ public class Food {
     }
 
     public Food() {
-        this.id = 0;
-        this.name = null;
-        this.categoryID = 0;
-        this.image = 0;
-        this.price = 0;
-        this.description = null;
+        this(null, null, null, null, null, null);
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -49,27 +44,27 @@ public class Food {
         this.name = name;
     }
 
-    public int getCategoryID() {
+    public String getCategoryID() {
         return categoryID;
     }
 
-    public void setCategoryID(int categoryID) {
+    public void setCategoryID(String categoryID) {
         this.categoryID = categoryID;
     }
 
-    public byte getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(byte image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
-    public double getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 

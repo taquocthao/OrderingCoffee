@@ -19,7 +19,6 @@
     <string name="forget_password">Quên mật khẩu</string>
     <string name="phone_or_mail">Số điện thoại hoặc email</string>
     <string name="next">Tiếp tục</string>
-    <string name="cancel">Hủy</string>
     <string name="new_password">Mật khẩu mới</string>
     <string name="reenter_new_password">Nhập lại mật khẩu mới</string>
     <string name="change_password">Đổi mật khẩu</string>
@@ -47,7 +46,28 @@
     <!--Error message-->
     <string name="invalid_code">Mã không hợp lệ</string>
     <string name="cannot_find_code">Không tìm thấy mã</string>
-    
+    <string name="no_connect">No internet connection! \nPlease check your connection!!!</string>
+    <string name="connect_fail">Connect fail! please try again!</string>
+    <string name="sign_up_fail">Sign up fail! please try again!</string>
+
     <!--message-->
     <string name="desciption_show">Description</string>
+
+    <!--Control name-->
+    <string name="book_now">Mua ngay</string>
+    <string name="food_name">Tên món</string>
+    <string name="food_price">giá tiền</string>
+    <string name="food_description">mô tả</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="try_again">Try Again</string>
+    <string name="history_order">Order history</string>
+    <string name="profile_navigation">Profile</string>
+    <string name="checkin_navigation">Check-in</string>
+    <string name="chat">Chat</string>
+    <string name="log_out">Log out</string>
+    <!--shoping cart-->
+    <string name="back_to_home">Back to home</string>
+    <string name="no_of_food_ordered">Số lượng:</string>
+
 </resources>

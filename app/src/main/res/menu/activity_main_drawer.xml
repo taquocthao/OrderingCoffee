@@ -11,7 +11,7 @@
         <item
             android:id="@+id/nav_order_history"
             android:icon="@drawable/time_history"
-            android:title="Order history" />
+            android:title="@string/history_order" />
         <item
             android:id="@+id/nav_favorite_oder"
             android:icon="@drawable/heart"
@@ -19,7 +19,7 @@
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/profile"
-            android:title="Profile" />
+            android:title="@string/profile_navigation" />
     </group>
 
     <item android:title="Communicate">
@@ -27,22 +27,22 @@
             <item
                 android:id="@+id/nav_checkin"
                 android:icon="@drawable/facebook"
-                android:title="Share" />
+                android:title="@string/checkin_navigation" />
             <item
                 android:id="@+id/nav_chat"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Chat" />
+                android:title="@string/chat" />
             <item
                 android:id="@+id/nav_send_fellback"
                 android:icon="@drawable/feedback"
-                android:title="Send feedback">
+                android:title="feedback">
             </item>
         </menu>
     </item>
     <item
         android:id="@+id/nav_logout"
         android:icon="@drawable/exit"
-        android:title="Log out">
+        android:title="@string/log_out">
     </item>
 
 

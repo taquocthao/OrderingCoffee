@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,14 +24,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.squareup.picasso.Picasso;
 import com.tathao.orderingcoffee.DAO.LoginHandler;
+import com.tathao.orderingcoffee.NetworkAPI.Config;
+import com.tathao.orderingcoffee.NetworkAPI.OkHttpHandler;
 import com.tathao.orderingcoffee.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by USER on 3/23/2018.
@@ -57,7 +63,19 @@ public class ProfileUser extends Fragment implements View.OnClickListener {
         init(view);
         int typeLogin = getActivity().getIntent().getIntExtra("typeLogin", 0);
         if(typeLogin == 1){ // đăng nhập bằng tài khoản mặc định
+            try {
 
+                setProfileFromOrderApp();
+
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         else if(typeLogin == 2){ // đăng nhập bằng facebook
             AccessToken accessToken = loginHandler.getAccessTokenUserFacebook();
@@ -112,9 +130,35 @@ public class ProfileUser extends Fragment implements View.OnClickListener {
             defaultControl(false);
         } else if (id == R.id.btnSaveProfile) {
             defaultControl(true);
+            UpdateProfile();
+
         } else if (id == R.id.edBirthDay) {
             new DatePickerDialog(view.getContext(), dateSetListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
         }
+    }
+
+    private void UpdateProfile(){
+        String url = Config.urlUserUpdate;
+        String name = edFullname.getText().toString();
+        String phone = edPhoneNumber.getText().toString();
+        String email = edEmail.getText().toString();
+        String birthday = edBirthday.getText().toString();
+        String gender = "";
+        if(rbGender.getCheckedRadioButtonId() == R.id.rbMale){
+            gender = "1";
+        }
+        else {
+            gender = "0";
+        }
+        String address = edAddress.getText().toString();
+        HashMap<String, String> params = new HashMap<>();
+        params.put("name", name);
+        params.put("dbo", birthday);
+        params.put("gender", gender);
+        params.put("phonenumber", phone);
+        params.put("email", email);
+
+        Object object = new OkHttpHandler(url, OkHttpHandler.PUT,  params, getActivity().getBaseContext()).execute();
     }
 
     @SuppressLint("ResourceAsColor")
@@ -146,7 +190,45 @@ public class ProfileUser extends Fragment implements View.OnClickListener {
         edBirthday.setText(simpleDateFormat.format(calendar.getTime()));
     }
 
-    private void setProfileFromOrderApp(){
+    private void setProfileFromOrderApp() throws ExecutionException, InterruptedException, IOException, JSONException {
+
+        String url = Config.urlUserInfor;
+        String json = new OkHttpHandler(url, OkHttpHandler.GET, null, getActivity().getBaseContext())
+                .execute()
+                .get().toString();
+        Log.d("jsonUser", json);
+
+        // ánh xạ chuỗi json về đối tượng user bằng thư viện moshi
+//        Moshi moshi = new Moshi.Builder().build();
+//        JsonAdapter<User> userJsonAdapter = moshi.adapter(User.class);
+//        User user = userJsonAdapter.fromJson(jsonUser);
+        JSONObject object = new JSONObject(json);
+
+        String name = object.getString("name");
+        String email = object.getString("email");
+        String phone = object.getString("phonenumber");
+        String birthday = object.getString("dob");
+        if(birthday.equals("null")){
+            birthday = null;
+        }
+        String gender = object.getString("gender");
+        String address = object.getString("address");
+        if(address.equals("null")){
+            address = null;
+        }
+        //Log.d("aaaaa", phone);
+
+        imgProfile.setImageResource(R.drawable.profile_default);
+        edFullname.setText(name);
+        edPhoneNumber.setText(phone);
+        edEmail.setText(email);
+        edBirthday.setText(birthday);
+        if(gender == "1"){
+            rbGender.check(R.id.rbMale);
+        }
+        else
+            rbGender.check(R.id.rbFemale);
+        edAddress.setText(address);
 
     }
 

@@ -50,12 +50,11 @@
             android:layout_marginTop="@dimen/size15">
 
             <EditText
-                android:id="@+id/sign_up_username"
+                android:id="@+id/sign_up_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="Arial"
-
-                android:hint="Tên đăng nhập"
+                android:hint="email"
                 android:singleLine="true"
                 android:textColorHint="@color/colorHint" />
 
@@ -95,6 +94,25 @@
 
         </android.support.design.widget.TextInputLayout>
 
+        <RadioGroup
+            android:id="@+id/sign_up_rgGender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/size10">
+
+            <RadioButton
+                android:id="@+id/sign_up_rbMale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Male"/>
+            <RadioButton
+                android:id="@+id/sign_up_rbFemale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Felmale"/>
+
+        </RadioGroup>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

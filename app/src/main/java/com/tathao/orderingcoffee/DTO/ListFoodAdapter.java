@@ -44,9 +44,17 @@ public class ListFoodAdapter extends RecyclerView.Adapter<ListFoodAdapter.ViewHo
     public void onBindViewHolder(ViewHodler holder, final int position) {
 
         holder.name.setText(listFood.get(position).getName());
-        holder.category.setText("" + listFood.get(position).getCategoryID());
-        holder.price.setText(" " + listFood.get(position).getPrice());
-        holder.image.setImageResource(listFood.get(position).getImage());
+        holder.category.setText(listFood.get(position).getCategoryID());
+        holder.price.setText(listFood.get(position).getPrice());
+
+//        if(listFood.get(position).getImage() != null){
+//            byte[] decodeString = Base64.decode(listFood.get(position).getImage(), Base64.DEFAULT);
+//            Bitmap bitmapImage = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+//            holder.image.setImageBitmap(bitmapImage);
+//        }
+
+
+       // holder.image.setImageResource(listFood.get(position).getImage());
         holder.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

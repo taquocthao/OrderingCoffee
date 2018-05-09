@@ -31,8 +31,6 @@ import com.tathao.orderingcoffee.NetworkAPI.Config;
 import com.tathao.orderingcoffee.NetworkAPI.OkHttpHandler;
 import com.tathao.orderingcoffee.NetworkAPI.UserDataStore;
 
-import org.json.JSONObject;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
@@ -65,8 +63,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
 
     private LoginHandler loginHandler;
-
-    JSONObject jsonObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,11 +136,11 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             Intent i = new Intent(LoginActivity.this, SignUpActivity.class);
             startActivity(i);
         } else if (id == R.id.button_Login_app) {
-//            String username = edUsername.getText().toString();
-//            String password = edPassword.getText().toString();
-//            LoginWithOrderApp(username, password);
-            EnterMainActivity(1);
-            finish();
+            String username = edUsername.getText().toString();
+            String password = edPassword.getText().toString();
+            LoginWithOrderApp(username, password);
+//            EnterMainActivity(1);
+//            finish();
         } else if (id == R.id.button_login_facebook) {
             LoginWithFacebook();
         } else if (id == R.id.button_login_google) {
@@ -162,7 +158,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         } else if (password.isEmpty()) {
             edPassword.setError("vui lòng nhập mật khẩu");
         } else {
-
             progressDialog = new ProgressDialog(this) {
                 @Override
                 public void onBackPressed() {
@@ -176,37 +171,35 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             progressDialog.setCancelable(true);
             progressDialog.show();
 
-            final String url = Config.urlLogin;
-            final HashMap<String, String> map = new HashMap<String, String>();
-            map.put("email", username);
-            map.put("password", password);
+
 //
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
+                        final String url = Config.urlLogin;
+                        final HashMap<String, String> map = new HashMap<String, String>();
+                        map.put("email", username);
+                        map.put("password", password);
 
                         String result = new OkHttpHandler(url, OkHttpHandler.POST, map, getBaseContext()).execute().get().toString();
-
 
 //                        jsonObject = new JSONObject(result);
 //                        String accessToken = jsonObject.getString("access_token");
 
                     //    Log.d("token", result);
-
                         storeData.setToken(result);
 
                         if(storeData.getToken() != null){
-                            progressDialog.dismiss();
                             EnterMainActivity(1);
                             finish();
+
+                            progressDialog.dismiss();
                         }
                         else {
                             progressDialog.dismiss();
                             Toast.makeText(LoginActivity.this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
                         }
-
-
 
 
                     } catch (InterruptedException e) {

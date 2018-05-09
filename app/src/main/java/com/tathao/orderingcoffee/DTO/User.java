@@ -8,18 +8,12 @@ public class User {
     private String phoneNumber;
     private String email;
     private String address;
+    private String wardid;
+    private String isdelete;
 
-    public User() {
-        this.id = null;
-        this.name = null;
-        this.birthday = null;
-        this.gender = null;
-        this.phoneNumber = null;
-        this.email = null;
-        this.address = null;
-    }
 
-    public User(String id, String name, String gender, String birthday, String phoneNumber, String email, String address) {
+    public User(String id, String name, String birthday, String gender , String phoneNumber, String email,
+                String address, String wardid, String isdelete) {
         this.id = id;
         this.name = name;
         this.birthday = birthday;
@@ -27,6 +21,8 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.address = address;
+        this.wardid = wardid;
+        this.isdelete = isdelete;
     }
 
     public String getId() {
@@ -35,15 +31,6 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getAddress() {
-
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getName() {
@@ -84,5 +71,30 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getAddress() {
+
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getWardid() {
+        return wardid;
+    }
+
+    public void setWardid(String wardid) {
+        this.wardid = wardid;
+    }
+
+    public String getIsdelete() {
+        return isdelete;
+    }
+
+    public void setIsdelete(String isdelete) {
+        this.isdelete = isdelete;
     }
 }
