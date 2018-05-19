@@ -13,36 +13,35 @@
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon_order_food"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity">
-
-        </activity>
-        <activity android:name=".SignUpActivity" />
-        <activity android:name=".VerifyPhoneActivity" />
-        <activity android:name=".ForgetPasswordActivity" />
-        <activity android:name=".VerifyEmailActivity" />
-        <activity android:name=".ChangePasswordActivity" />
-        <activity android:name=".ChangePasswordSuccessActivity" />
+        <activity android:name=".view.Activity.LoginActivity"></activity>
+        <activity android:name=".view.Activity.SignUpActivity" />
+        <activity android:name=".view.Activity.VerifyPhoneActivity" />
+        <activity android:name=".view.Activity.ForgetPasswordActivity" />
+        <activity android:name=".view.Activity.VerifyEmailActivity" />
+        <activity android:name=".view.Activity.ChangePasswordActivity" />
+        <activity android:name=".view.Activity.ChangePasswordSuccessActivity" />
         <activity
-            android:name=".MainActivity"
+            android:name=".view.MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".CheckInternetActivity">
+        <activity android:name=".view.Activity.CheckInternetActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.Activity.SignUpLayout2"></activity>
     </application>
 
 </manifest>

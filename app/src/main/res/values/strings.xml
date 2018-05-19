@@ -46,9 +46,10 @@
     <!--Error message-->
     <string name="invalid_code">Mã không hợp lệ</string>
     <string name="cannot_find_code">Không tìm thấy mã</string>
+    <string name="cannot_find_category_food">can not find category food</string>
     <string name="no_connect">No internet connection! \nPlease check your connection!!!</string>
     <string name="connect_fail">Connect fail! please try again!</string>
-    <string name="sign_up_fail">Sign up fail! please try again!</string>
+    <string name="sign_up_fail">Fail to sign up, check information and try again</string>
 
     <!--message-->
     <string name="desciption_show">Description</string>
@@ -66,8 +67,20 @@
     <string name="checkin_navigation">Check-in</string>
     <string name="chat">Chat</string>
     <string name="log_out">Log out</string>
+
+    <!--Sign-up Control-->
+    <string name="continue_to_sign_up">Continue</string>
+    <string name="sign_up">Sign Up</string>
+
     <!--shoping cart-->
     <string name="back_to_home">Back to home</string>
-    <string name="no_of_food_ordered">Số lượng:</string>
+    <string name="quanlity">quanlity:</string>
+
+    <!--Spinner-->
+    <string name="choose_country">Country</string>
+    <string name="choose_city">City</string>
+    <string name="choose_district">District</string>
+    <string name="choose_ward">ward</string>
+
 
 </resources>

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     xmlns:numberpicker="http://schemas.android.com/apk/res-auto"
-    tools:context="com.tathao.orderingcoffee.FragmentApp.ListFoodPage">
+    tools:context=".view.Fragment.ListFoodPage">
 
     <LinearLayout
         android:id="@+id/layout_item_food"
@@ -26,20 +26,13 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/imgFood"
+                android:id="@+id/imgFood_FoodPage"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/size90"
                 android:layout_margin="@dimen/size3"
-                android:background="@mipmap/ic_launcher" />
+                android:background="@mipmap/ic_launcher"/>
 
-            <TextView
-                android:id="@+id/tvPriceFood"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/size10"
-                android:text="price"
-                android:textColor="@color/colorRed"
-                android:layout_marginTop="@dimen/size10"/>
+
 
         </LinearLayout>
 
@@ -63,15 +56,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/size10"
                     android:text="Title"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textSize="@dimen/size20"/>
 
                 <TextView
-                    android:id="@+id/tvCategoryFood"
+                    android:id="@+id/tvPriceFood"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/size10"
-                    android:layout_marginTop="@dimen/size10"
-                    android:text="category" />
+                    android:text="price"
+                    android:textColor="@color/colorRed"
+                    android:layout_marginTop="@dimen/size10"/>
 
 
 
@@ -93,7 +88,7 @@
                     android:layout_marginRight="@dimen/size3">
 
                     <com.travijuu.numberpicker.library.NumberPicker
-                       android:id="@+id/number_picker"
+                       android:id="@+id/number_picker_food_page"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         numberpicker:min="1">
