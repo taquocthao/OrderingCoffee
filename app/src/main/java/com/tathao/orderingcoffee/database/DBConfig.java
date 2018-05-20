@@ -45,6 +45,11 @@ public class DBConfig {
     public static final String DROP_TABLE_INVOICE_DETAILS = "DROP TABLE IF EXISTS " + TABLE_INVOICES_DETAILS;
     // Query table food
     public static final String SQL_QUERY_INVOICES_DETAILS = "SELECT * FROM " + TABLE_INVOICES_DETAILS;
+    // get quantity food
+    public static final String SQL_QUERY_INVOICES_DETAILS_QUANLITY = "SELECT "+TABLE_INVOICES_DETAILS_QUANLITY+
+                                                                     " FROM " + TABLE_INVOICES_DETAILS +
+                                                                     " WHERE " +TABLE_INVOICES_DETAILS_ID + " = ";
+
 
 
 }

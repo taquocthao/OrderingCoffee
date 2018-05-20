@@ -12,4 +12,6 @@ public class Config {
     public static final String urlWard = http +"/cafe/api/address/ward/get?district_id=";
     public static final String urlCategoryFoodes = http+ "/cafe/api/product/category/get?shop_id=";
     public static final String urlFoodes = http + "/cafe/api/product/get?category_id=";
+
+    public static final String urlAddSaleBill = http+ "/cafe/api/sale_bill/add";
 }

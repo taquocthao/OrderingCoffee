@@ -35,6 +35,7 @@ public class DBManager extends SQLiteOpenHelper{
         onCreate(db);
     }
 
+    // thêm danh sách món ăn vào database
     public void addFoodFromJSON(List<Food> foods){
         db = this.getWritableDatabase();
         for(Food x : foods){
@@ -52,6 +53,7 @@ public class DBManager extends SQLiteOpenHelper{
         db.close();
     }
 
+    // Lấy danh sách món ăn từ id của category food
     public List<Food> getListFood(String idCategory){
         db = this.getWritableDatabase();
         List<Food> foods = new ArrayList<>();
@@ -75,12 +77,15 @@ public class DBManager extends SQLiteOpenHelper{
         return foods;
     }
 
-    public void deleteTableFood(){
-//        SQLiteDatabase db = getWritableDatabase();
-//        db.delete(DBConfig.TABLE_FOOD);
-//        db.close();
+    // Xóa danh sách món ăn
+    public boolean deleteTableFood(){
+        SQLiteDatabase db = getWritableDatabase();
+        int affectRow = db.delete(DBConfig.TABLE_FOOD, null, null);
+        db.close();
+        return  affectRow > 0;
     }
 
+    // lấy số lượng món ăn trong danh sách
     public int getFoodCount(String idCategory){
         String sql = DBConfig.SQL_QUERY_FOOD + idCategory;
         db = this.getReadableDatabase();
@@ -88,7 +93,7 @@ public class DBManager extends SQLiteOpenHelper{
         return cursor.getCount();
     }
 
-
+    // thêm chi tiết hóa đơn
     public boolean addInvoiceDetails(InvoiceDetails details) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -104,6 +109,7 @@ public class DBManager extends SQLiteOpenHelper{
         return affectRow > 0;
     }
 
+    // lấy tất cả danh sách chi tiết hóa đơn
     public List<InvoiceDetails> getAllListInvoiceDetails() {
         List<InvoiceDetails> list = new ArrayList<>();
         db = this.getReadableDatabase();
@@ -127,21 +133,50 @@ public class DBManager extends SQLiteOpenHelper{
         return list;
     }
 
+    // xóa một chi tiết hóa đơn bằng id food
     public boolean deleteInvoiceDetailsById(String id) {
         db = this.getWritableDatabase();
-        int affectRow = db.delete(DBConfig.TABLE_INVOICES_DETAILS, "ID=?", new String[]{id});
+        int affectRow = db.delete(DBConfig.TABLE_INVOICES_DETAILS, DBConfig.TABLE_INVOICES_DETAILS_ID+"=?", new String[]{id});
         return affectRow > 0;
     }
 
+    // xóa tất cả chi tiết hóa đơn
     public boolean deleteInvoiceDetails() {
         db = this.getWritableDatabase();
         int affectRow = db.delete(DBConfig.TABLE_INVOICES_DETAILS, null, null);
         return affectRow > 0;
     }
 
-    public void updateQuanlityFoodInInvoice(String idFood){
+    // cập nhật số lượng thức ăn trong danh sách chi tiết hóa đơn
+    public boolean updateQuanlityFoodInInvoice(String idFood, String quanlity){
         db = this.getWritableDatabase();
+
         ContentValues values = new ContentValues();
+        values.put(DBConfig.TABLE_INVOICES_DETAILS_QUANLITY, quanlity);
+        int affectRow = db.update(DBConfig.TABLE_INVOICES_DETAILS, values, DBConfig.TABLE_INVOICES_DETAILS_ID+"=?",new String[]{idFood});
+        db.close();
+        return affectRow >0;
+    }
+
+    // lấy số lượng của một món ăn được gọi
+    public int getQuanlityFoodFromDetails(String idFood){
+        db = getReadableDatabase();
+        String sql = DBConfig.SQL_QUERY_INVOICES_DETAILS_QUANLITY + idFood;
+        Cursor cursor = db.rawQuery(sql, null);
+        String quanlity = cursor.getString(0);
+        db.close();
+        cursor.close();
+        return Integer.parseInt(quanlity);
+    }
+
+    // tính tổng giá tiền
+    public long calculateTotalPrice(List<InvoiceDetails> details){
+        db = this.getReadableDatabase();
+        long total = 0;
+        for (InvoiceDetails x : details){
+            total += Long.parseLong(x.TotalPrice.trim());
+        }
+        return total;
     }
 
 

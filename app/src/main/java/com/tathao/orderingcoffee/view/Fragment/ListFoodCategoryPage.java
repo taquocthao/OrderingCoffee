@@ -46,25 +46,34 @@ public class ListFoodCategoryPage extends Fragment implements AddFragment, OnIte
     private RecyclerView recyclerView;
     private GridLayoutManager gridLayoutManager;
     private List<FoodCategory> foodCategories;
-    //    ProgressDialog progressDialog;
     private List<Food> foodList;
-
     SearchView searchView;
-
+    private String shopID = null;
+    private String tableID =null;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_list_food_category, container, false);
+        // hiển thị button back arrow trên toolbar
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // cho hiển thị item trên toolbar
         setHasOptionsMenu(true);
+        // khởi tạo các fields
         init(view);
-        if (getArguments() != null) {
+        // kiểm tra thông tin nhận được từ trang home page
+        if (getArguments() != null) { // nếu thông tin không rỗng
+            shopID = getArguments().getString("shop_id");
+            tableID = getArguments().getString("table_id");
+            /* hiển thị danh sách category
+               không load được danh sách -> false
+               ngược lại -> true
+             */
             boolean isSuccess = LoadItemCategoryFood();
-            if (isSuccess) {
+            if (isSuccess) { // nếu trả về true
                 ListFoodCategoryAdapter foodCategoryAdapter = new ListFoodCategoryAdapter(foodCategories, getActivity().getBaseContext(), this);
                 recyclerView.setAdapter(foodCategoryAdapter);
-            } else {
+            } else { // nếu không load được -> tạo một item ảo, thông báo lỗi
                 foodCategories.add(new FoodCategory(null, "N/A", null, null, null, null, null));
                 ListFoodCategoryAdapter foodCategoryAdapter = new ListFoodCategoryAdapter(foodCategories, getActivity().getBaseContext(), this);
                 recyclerView.setAdapter(foodCategoryAdapter);
@@ -78,14 +87,8 @@ public class ListFoodCategoryPage extends Fragment implements AddFragment, OnIte
         recyclerView.setHasFixedSize(true);
         gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         recyclerView.setLayoutManager(gridLayoutManager);
+
         foodCategories = new ArrayList<>();
-//        progressDialog = new ProgressDialog(getActivity()){
-//            @Override
-//            public void onBackPressed() {
-//                super.onBackPressed();
-//                progressDialog.dismiss();
-//            }
-//        };
         foodList = new ArrayList<>();
     }
 
@@ -105,19 +108,23 @@ public class ListFoodCategoryPage extends Fragment implements AddFragment, OnIte
         return false;
     }
 
+    // hiển thị menu item trên toolbar
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main, menu);
         MenuItem menuItem = menu.findItem(R.id.menu_action_searh);
         searchView = (SearchView) menuItem.getActionView();
+        // bắt sự kiện tim kiếm trên search view
         searchView.setOnQueryTextListener(this);
     }
 
+    // sự kiện click item trên menu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_shopping_cart) {
+            // hiển thị dialog shopping carts
             ShoppingCartDialog cartDialog = new ShoppingCartDialog();
             cartDialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "dialog shopping cart");
         }
@@ -127,45 +134,58 @@ public class ListFoodCategoryPage extends Fragment implements AddFragment, OnIte
     // sự kiện click item trên recycler view
     @Override
     public void onItemClick(View view, int position) {
+        // lấy id của một category từ vị trí trên recyclerView
         final String idCategory = foodCategories.get(position).ID;
+        // khởi tạo một lớp thao tác database
         DBManager db = new DBManager(getActivity().getBaseContext());
+        // kiểm tra xem danh sách thực phẩm của category đã được thêm vào csdl chưa
+        // nếu đã tồn tại -> true
+        // ngược lại -> false
         boolean existFoods = db.getFoodCount(idCategory) > 0 ? true : false;
-        if(existFoods){ // nếu đã tồn tại csdl
+        if (existFoods) { // nếu đã tồn tại trong csdl
+            // đi tới trang hiển thị danh sách thực phẩm
             GotoListFood(idCategory);
-        }
-        else {
-            boolean isSuccess = LoadItemFoodFromJSON(idCategory);
-            if (isSuccess) {
+        } else { // nếu chưa tồn tại danh sách thực phẩm
+            // tải danh sách thực phẩm từ json
+            boolean isSuccess = LoadItemFoodFromServer(idCategory);
+            if (isSuccess) { // nếu tải thành công
+                // lưu ds thực phẩm vừa tải vào csdl
                 db.addFoodFromJSON(foodList);
+                // đi đến trang hiển thị danh sách thực phẩm
                 GotoListFood(idCategory);
-            } else {
+            } else { // nếu không tải được danh sách thực phẩm từ server
                 Toast.makeText(getActivity().getBaseContext(), "Connect fail", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
+    // đi đến trang hiển thị danh sách thực phẩm
     public void GotoListFood(String idCategory) {
         ListFoodPage foodPage = new ListFoodPage();
         Bundle bundle = new Bundle();
         bundle.putString("category", idCategory);
+        bundle.putString("shop_id", shopID);
+        bundle.putString("table_id", tableID);
         foodPage.setArguments(bundle);
-        addFragment(foodPage, "Thực dơn");
+        addFragment(foodPage, getString(R.string.menu));
     }
 
-    private boolean LoadItemFoodFromJSON(String idCategory) {
+    // Kiểm tra việc tải ds thực phẩm từ server
+    private boolean LoadItemFoodFromServer(String idCategory) {
         String url = Config.urlFoodes + idCategory;
         try {
             String json = new Client(url, Client.GET, null, (MainActivity) getActivity())
                     .execute().get().toString();
-            //       Log.d("jsonresult", json);
+            // ép kiểu kết quả trả về từ server thành object json
+            // kiểm tra danh sách trong object
             JSONObject jsonObject = new JSONObject(json);
             JSONArray jsonArray = jsonObject.getJSONArray("product");
-            if (jsonArray.length() > 0) {
+            if (jsonArray.length() > 0) { // tồn tại danh sách các đối tượng
+                // parse from json to object java
                 Moshi moshi = new Moshi.Builder().build();
                 Type type = Types.newParameterizedType(List.class, Food.class);
                 JsonAdapter<List<Food>> adapter = moshi.adapter(type);
                 foodList = adapter.fromJson(jsonArray.toString());
-//                Log.d("fiaaaa", foodList.size() + "");
                 return true;
             }
         } catch (JSONException e) {
@@ -181,6 +201,7 @@ public class ListFoodCategoryPage extends Fragment implements AddFragment, OnIte
     }
 
 
+    // thêm một fragment
     @Override
     public void addFragment(Fragment fragment, String title) {
         getActivity().getFragmentManager().beginTransaction().replace(R.id.content, fragment)
@@ -190,6 +211,7 @@ public class ListFoodCategoryPage extends Fragment implements AddFragment, OnIte
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
     }
 
+    // Tìm kiếm danh sách category food
     @Override
     public boolean onQueryTextSubmit(String query) {
         return true;

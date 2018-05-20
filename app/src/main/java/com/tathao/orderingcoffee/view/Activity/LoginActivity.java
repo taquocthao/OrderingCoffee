@@ -28,10 +28,10 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.tathao.orderingcoffee.NetworkAPI.Client;
-import com.tathao.orderingcoffee.presenter.LoginStore;
 import com.tathao.orderingcoffee.NetworkAPI.Config;
 import com.tathao.orderingcoffee.NetworkAPI.UserDataStore;
 import com.tathao.orderingcoffee.R;
+import com.tathao.orderingcoffee.presenter.LoginStore;
 import com.tathao.orderingcoffee.view.MainActivity;
 
 import java.util.Arrays;
@@ -64,8 +64,20 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
-
         storeData = new UserDataStore(getBaseContext());
+        hasLogin(); // hàm kiểm tra người dùng đã đăng nhập chưa
+        init(); // nếu chưa đăng nhập, bắt đầu khởi tạo các fields
+        // người dùng vừa đăng kí, thông tin sẽ gửi lại activity login
+        // lấy thông tin vừa nhận được
+        Intent intent = getIntent();
+        if(intent != null){
+            String email = intent.getStringExtra("email");
+            edUsername.setText(email);
+        }
+
+    }
+
+    private void hasLogin(){
         //Kiểm tra có đăng nhập bằng tài khoản mặc định hay không
         if (storeData.getToken() != null) {
             EnterMainActivity(1);
@@ -82,10 +94,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         if (account != null) {
             EnterMainActivity(3);
         }
-
-        init();
-
-
     }
 
     //hàm khởi tạo
@@ -199,17 +207,14 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             final HashMap<String, String> params = new HashMap<String, String>();
             params.put("email", username);
             params.put("password", password);
-
-
-//            Log.d("email", params.get("email"));
-//            Log.d("pass", params.get("password"));
             try {
                 String result = new Client(url, Client.POST, params, getBaseContext())
                         .execute().get().toString();
 
-//                Log.d("login_result", result);
+                Log.d("login_result", result);
 
                 storeData.setToken(result);
+                storeData.setUserData(result);
 
                 if (storeData.getToken() != null) {
                     EnterMainActivity(1);

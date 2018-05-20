@@ -31,7 +31,6 @@ import java.util.concurrent.ExecutionException;
 public class HomePage extends Fragment implements View.OnClickListener, AddFragment {
 
     private Button btnScanBarCode;
-    private String shopID = null;
 
     @Nullable
     @Override
@@ -72,21 +71,29 @@ public class HomePage extends Fragment implements View.OnClickListener, AddFragm
                 Toast.makeText(getActivity(), getString(R.string.cannot_find_code), Toast.LENGTH_LONG).show();
             } else { //quét được một mã nào đó
                 try {
+                    // ép kiểu kết quả trả về từ barcode thành object
+                    // kiểm tra đối tượng object đó có chưa key shop_id hay không
+                    // false -> toast barcode không hợp lệ
+                    // true -> gửi giá trị vừa quét được lên server
                     String requestJson = result.getContents();
                     JSONObject jsonObject = new JSONObject(requestJson);
                     if(jsonObject.has("shop_id")){//xem xét mã barcode có hợp lệ
-                        shopID = jsonObject.getString("shop_id");
+                        String shopID = jsonObject.getString("shop_id");
+                        String tableID = jsonObject.getString("table_id");
                         String url = Config.urlCategoryFoodes + shopID;
-//                        String jsonResult = new Client(url, Client.GET, null, getActivity())
-//                                .execute().get().toString();
                         String jsonResult = new Client(url, Client.GET, null, getActivity().getBaseContext())
                                             .execute().get().toString();
+                        // ép kiểu giá trị vừa nhận về từ server thành json array
                         JSONArray jsonArray = new JSONArray(jsonResult);
+                        // kiểm tra độ dài của array có hợp lệ hay không
                         if(jsonArray.length() <= 0){
                             Toast.makeText(getActivity(), R.string.cannot_find_category_food, Toast.LENGTH_SHORT).show();
-                        }else{
+                        }else{ // nếu độ dài array hợp lệ -> có danh sách category food
+                            // truyền danh sách đó qua trang danh sách thức ăn
                             Bundle bundle = new Bundle();
                             bundle.putString("json", jsonResult);
+                            bundle.putString("shop_id", shopID);
+                            bundle.putString("table_id", tableID);
                             ListFoodCategoryPage foodCategoryPage = new ListFoodCategoryPage();
                             foodCategoryPage.setArguments(bundle);
                             addFragment(foodCategoryPage, getString(R.string.category));

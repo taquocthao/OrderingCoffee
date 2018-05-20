@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.tathao.orderingcoffee.Interface.OnNumberPickerValueChangeLisener;
 import com.tathao.orderingcoffee.R;
+import com.tathao.orderingcoffee.database.DBManager;
 import com.tathao.orderingcoffee.model.InvoiceDetails;
 import com.travijuu.numberpicker.library.Enums.ActionEnum;
 import com.travijuu.numberpicker.library.Interface.ValueChangedListener;
@@ -22,11 +23,13 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     private List<InvoiceDetails> foods;
     private Context context;
     private OnNumberPickerValueChangeLisener valueChangedListener;
+    private DBManager db;
 
     public OrderAdapter(List<InvoiceDetails> foods, Context context, OnNumberPickerValueChangeLisener valueChangedListener) {
         this.foods = foods;
         this.context = context;
         this.valueChangedListener = valueChangedListener;
+        db = new DBManager(context);
     }
 
     @Override
@@ -40,7 +43,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         holder.name.setText(foods.get(position).Name);
-        holder.price.setText(foods.get(position).SalePrice);
+        holder.price.setText(foods.get(position).getTotalPrice());
+        holder.quanlity.setValue(Integer.parseInt(foods.get(position).getQuanlity()));
         holder.quanlity.setValueChangedListener(new ValueChangedListener() {
             @Override
             public void valueChanged(int value, ActionEnum action) {
@@ -51,7 +55,13 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         });
 //        double price  = Double.parseDouble(foods.get(position).SalePrice) * holder.quanlity.getValue();
 //        holder.price.setText(price + "");
-
+        holder.imgDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String idFood = foods.get(position).getID();
+                db.deleteInvoiceDetailsById(idFood);
+            }
+        });
         holder.image.setImageBitmap(null);
     }
 
@@ -66,7 +76,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         private TextView name;
         private TextView price;
         private NumberPicker quanlity;
-        private ImageView image;
+        private ImageView image, imgDeleteButton;
 //        private TextView totalPrice;
 
         public ViewHolder(View itemView) {
@@ -77,6 +87,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             quanlity.setMin(1);
             image = (ImageView) itemView.findViewById(R.id.imgFood_ordered);
 //            totalPrice = (TextView)itemView.findViewById(R.id.tvTotalPrice_shopping);
+            imgDeleteButton = (ImageView)itemView.findViewById(R.id.imgDelete_ordered);
         }
     }
 }

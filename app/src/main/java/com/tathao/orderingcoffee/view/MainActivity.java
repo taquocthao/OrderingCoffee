@@ -195,9 +195,11 @@ public class MainActivity extends AppCompatActivity
                 .get().toString();
        // Log.d("jsonUser", jsonUser);
         // ánh xạ chuỗi json về đối tượng user bằng thư viện moshi
+        store.setUserData(jsonUser);
         Moshi moshi = new Moshi.Builder().build();
         JsonAdapter<User> userJsonAdapter = moshi.adapter(User.class);
         User user = userJsonAdapter.fromJson(jsonUser);
+
         imgUser.setImageResource(R.drawable.profile_default);
         String name = user.getName();
         String email = user.getEmail();

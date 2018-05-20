@@ -3,7 +3,6 @@ package com.tathao.orderingcoffee.view.Activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -15,19 +14,18 @@ import android.widget.Toast;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
+import com.tathao.orderingcoffee.NetworkAPI.Client;
+import com.tathao.orderingcoffee.NetworkAPI.Config;
+import com.tathao.orderingcoffee.NetworkAPI.UserDataStore;
+import com.tathao.orderingcoffee.R;
 import com.tathao.orderingcoffee.model.City;
 import com.tathao.orderingcoffee.model.Country;
 import com.tathao.orderingcoffee.model.District;
+import com.tathao.orderingcoffee.model.Ward;
 import com.tathao.orderingcoffee.presenter.ListCityAdapter;
 import com.tathao.orderingcoffee.presenter.ListCountryApdater;
 import com.tathao.orderingcoffee.presenter.ListDistrictAdapter;
 import com.tathao.orderingcoffee.presenter.ListWardApdapter;
-import com.tathao.orderingcoffee.model.Ward;
-import com.tathao.orderingcoffee.NetworkAPI.Config;
-import com.tathao.orderingcoffee.NetworkAPI.Client;
-import com.tathao.orderingcoffee.NetworkAPI.UserDataStore;
-import com.tathao.orderingcoffee.R;
-import com.tathao.orderingcoffee.view.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -94,24 +92,33 @@ public class SignUpLayout2 extends Activity implements View.OnClickListener, Ada
 
             String jsonRegister = new Client(urlRegister, Client.POST, params, getBaseContext())
                     .execute().get().toString();
-            Log.d("jsonRegister", jsonRegister);
-            store.setToken(jsonRegister);
-
-            if (store.getToken() != null) {
-                return true;
+            JSONObject object = new JSONObject(jsonRegister);
+            if(object.has("email")){
+//                store.setUserData(jsonRegister);
+                return  true;
             }
+//            Log.d("jsonRegister", jsonRegister);
+//            store.setToken(jsonRegister);
+//
+//            if (store.getToken() != null) {
+//                return true;
+//            }
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         return false;
     }
 
-    private void GotoMainActivity() {
-        Intent i = new Intent(SignUpLayout2.this, MainActivity.class);
-        i.putExtra("typeLogin", 1);
+    // trờ lại form đăng nhập
+    private void GotoLoginActivity(String email) {
+        Intent i = new Intent(SignUpLayout2.this, LoginActivity.class);
+        i.putExtra("email", email);
+
         startActivity(i);
         finish();
     }
@@ -146,30 +153,32 @@ public class SignUpLayout2 extends Activity implements View.OnClickListener, Ada
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.sign_up_button_create_account) {
+            String email = null;
             HashMap<String, String> params = new HashMap<>();
             // lấy thông tin từ activity trước
             Intent intent = getIntent();
             if (intent != null && isValidAddress()) {
                 Bundle bundle = intent.getBundleExtra("params");
                 String name = bundle.getString("name");
-                String email = bundle.getString("email");
+                email = bundle.getString("email");
                 String password = bundle.getString("password");
                 String re_password = bundle.getString("re_password");
                 String gender = bundle.getString("gender");
                 String phone = bundle.getString("phone_number");
 
+//                Log.d("gennder", gender);
                 params.put("name", name);
                 params.put("email", email);
                 params.put("password", password);
                 params.put("re_password", re_password);
                 params.put("gender", gender);
-                params.put("phone_number", phone);
+                params.put("phonenumber", phone);
                 params.put("ward_id", id_ward);
             }
 
             boolean isSuccess = register(params);
             if (isSuccess) {
-                GotoMainActivity();
+                GotoLoginActivity(email);
             } else {
                 Toast.makeText(getBaseContext(), R.string.sign_up_fail, Toast.LENGTH_SHORT).show();
             }
@@ -338,7 +347,7 @@ public class SignUpLayout2 extends Activity implements View.OnClickListener, Ada
             district = listDistrict.get(position).Name;
             LoadItemOnSpinnerWard(id_district);
         } else if (idSpinner == R.id.spinner_ward_register) {
-            id_ward =  listWard.get(position).ID;
+            id_ward = listWard.get(position).ID;
             ward = listWard.get(position).Name;
         }
     }
