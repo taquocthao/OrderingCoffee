@@ -1,5 +1,6 @@
 package com.tathao.orderingcoffee.view.Fragment;
 
+
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,13 +22,17 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
 import com.tathao.orderingcoffee.Interface.AddFragment;
-import com.tathao.orderingcoffee.Interface.OnItemRecyclerviewLisener;
+import com.tathao.orderingcoffee.Interface.OnItemRecyclerViewLisener;
+import com.tathao.orderingcoffee.Interface.OnUpdateFromDialog;
 import com.tathao.orderingcoffee.NetworkAPI.Client;
 import com.tathao.orderingcoffee.NetworkAPI.Config;
 import com.tathao.orderingcoffee.R;
 import com.tathao.orderingcoffee.database.DBManager;
+import com.tathao.orderingcoffee.model.ConvertItemShoppingCart;
 import com.tathao.orderingcoffee.model.Food;
 import com.tathao.orderingcoffee.model.FoodCategory;
+import com.tathao.orderingcoffee.model.InvoiceDetails;
+import com.tathao.orderingcoffee.model.ShowDialogCustom;
 import com.tathao.orderingcoffee.presenter.ListFoodCategoryAdapter;
 import com.tathao.orderingcoffee.view.Dialog.ShoppingCartDialog;
 import com.tathao.orderingcoffee.view.MainActivity;
@@ -41,7 +47,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class ListFoodCategoryPage extends Fragment implements AddFragment, OnItemRecyclerviewLisener, SearchView.OnQueryTextListener {
+public class ListFoodCategoryPage extends Fragment implements AddFragment, OnItemRecyclerViewLisener
+        , SearchView.OnQueryTextListener, OnUpdateFromDialog {
 
     private RecyclerView recyclerView;
     private GridLayoutManager gridLayoutManager;
@@ -50,6 +57,9 @@ public class ListFoodCategoryPage extends Fragment implements AddFragment, OnIte
     SearchView searchView;
     private String shopID = null;
     private String tableID =null;
+    private static int count = 0;
+    private DBManager db;
+    private List<InvoiceDetails> invoiceDetails;
 
     @Nullable
     @Override
@@ -73,6 +83,10 @@ public class ListFoodCategoryPage extends Fragment implements AddFragment, OnIte
             if (isSuccess) { // nếu trả về true
                 ListFoodCategoryAdapter foodCategoryAdapter = new ListFoodCategoryAdapter(foodCategories, getActivity().getBaseContext(), this);
                 recyclerView.setAdapter(foodCategoryAdapter);
+                invoiceDetails = db.getAllListInvoiceDetails();
+                count = invoiceDetails.size();
+                // reset toolbar
+                ((AppCompatActivity)getActivity()).supportInvalidateOptionsMenu();
             } else { // nếu không load được -> tạo một item ảo, thông báo lỗi
                 foodCategories.add(new FoodCategory(null, "N/A", null, null, null, null, null));
                 ListFoodCategoryAdapter foodCategoryAdapter = new ListFoodCategoryAdapter(foodCategories, getActivity().getBaseContext(), this);
@@ -87,7 +101,8 @@ public class ListFoodCategoryPage extends Fragment implements AddFragment, OnIte
         recyclerView.setHasFixedSize(true);
         gridLayoutManager = new GridLayoutManager(getActivity(), 1);
         recyclerView.setLayoutManager(gridLayoutManager);
-
+        db = new DBManager(getActivity().getBaseContext());
+        invoiceDetails = new ArrayList<>();
         foodCategories = new ArrayList<>();
         foodList = new ArrayList<>();
     }
@@ -113,6 +128,11 @@ public class ListFoodCategoryPage extends Fragment implements AddFragment, OnIte
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main, menu);
+
+        MenuItem menuItemCart = menu.findItem(R.id.menu_shopping_cart);
+        menuItemCart.setIcon(ConvertItemShoppingCart.convertLayoutToImage(getActivity().getBaseContext(), count,R.drawable.ic_shopping_cart));
+
+
         MenuItem menuItem = menu.findItem(R.id.menu_action_searh);
         searchView = (SearchView) menuItem.getActionView();
         // bắt sự kiện tim kiếm trên search view
@@ -124,9 +144,15 @@ public class ListFoodCategoryPage extends Fragment implements AddFragment, OnIte
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_shopping_cart) {
-            // hiển thị dialog shopping carts
-            ShoppingCartDialog cartDialog = new ShoppingCartDialog();
-            cartDialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "dialog shopping cart");
+            // hiển thị shopping carts trên dialog
+            ShoppingCartDialog dialog = new ShoppingCartDialog();
+            Bundle bundle = new Bundle();
+            bundle.putString("shop_id", shopID);
+            bundle.putString("table_id", tableID);
+            dialog.setArguments(bundle);
+//            dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "dialog shopping cart");
+            dialog.setTargetFragment(this, 0);
+            dialog.show(getFragmentManager(), "dialog shopping cart");
         }
         return super.onOptionsItemSelected(item);
     }
@@ -134,6 +160,9 @@ public class ListFoodCategoryPage extends Fragment implements AddFragment, OnIte
     // sự kiện click item trên recycler view
     @Override
     public void onItemClick(View view, int position) {
+
+        ShowDialogCustom.showSimpleProgressDialog(getActivity().getBaseContext(),"Go to list food", "Loading...", false);
+
         // lấy id của một category từ vị trí trên recyclerView
         final String idCategory = foodCategories.get(position).ID;
         // khởi tạo một lớp thao tác database
@@ -159,6 +188,16 @@ public class ListFoodCategoryPage extends Fragment implements AddFragment, OnIte
         }
     }
 
+    @Override
+    public void onNumberPickerValueChange(int value, int position) {
+
+    }
+
+    @Override
+    public void onImageButtonDelete(View view, int positon) {
+
+    }
+
     // đi đến trang hiển thị danh sách thực phẩm
     public void GotoListFood(String idCategory) {
         ListFoodPage foodPage = new ListFoodPage();
@@ -176,6 +215,7 @@ public class ListFoodCategoryPage extends Fragment implements AddFragment, OnIte
         try {
             String json = new Client(url, Client.GET, null, (MainActivity) getActivity())
                     .execute().get().toString();
+            Log.d("json_category_food", json);
             // ép kiểu kết quả trả về từ server thành object json
             // kiểm tra danh sách trong object
             JSONObject jsonObject = new JSONObject(json);
@@ -203,14 +243,13 @@ public class ListFoodCategoryPage extends Fragment implements AddFragment, OnIte
 
     // thêm một fragment
     @Override
-    public void addFragment(Fragment fragment, String title) {
+    public void addFragment(android.app.Fragment fragment, String title) {
         getActivity().getFragmentManager().beginTransaction().replace(R.id.content, fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(getString(R.string.food_page))
                 .commit();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
     }
-
     // Tìm kiếm danh sách category food
     @Override
     public boolean onQueryTextSubmit(String query) {
@@ -234,6 +273,21 @@ public class ListFoodCategoryPage extends Fragment implements AddFragment, OnIte
         }
         return true;
     }
+
+
+    // cập nhập lại số lượng trên item giỏ hàng
+    @Override
+    public void onDeleteFromDialog(boolean update) {
+        invoiceDetails = db.getAllListInvoiceDetails();
+        count = invoiceDetails.size();
+        ((AppCompatActivity)getActivity()).supportInvalidateOptionsMenu();
+    }
+
+    @Override
+    public void onAddFoodFormDialog(boolean isAdd) {
+
+    }
+
 }
 
 

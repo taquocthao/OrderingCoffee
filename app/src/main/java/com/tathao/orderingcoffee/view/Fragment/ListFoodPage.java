@@ -1,8 +1,9 @@
 package com.tathao.orderingcoffee.view.Fragment;
 
-import android.app.Fragment;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,11 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.tathao.orderingcoffee.Interface.OnItemRecyclerviewLisener;
+import com.tathao.orderingcoffee.Interface.OnItemRecyclerViewLisener;
+import com.tathao.orderingcoffee.Interface.OnUpdateFromDialog;
 import com.tathao.orderingcoffee.R;
 import com.tathao.orderingcoffee.database.DBManager;
+import com.tathao.orderingcoffee.model.ConvertItemShoppingCart;
 import com.tathao.orderingcoffee.model.Food;
 import com.tathao.orderingcoffee.model.InvoiceDetails;
+import com.tathao.orderingcoffee.model.ShowDialogCustom;
 import com.tathao.orderingcoffee.presenter.ListFoodAdapter;
 import com.tathao.orderingcoffee.view.Dialog.ItemFoodDialog;
 import com.tathao.orderingcoffee.view.Dialog.ShoppingCartDialog;
@@ -33,7 +37,7 @@ import java.util.concurrent.ExecutionException;
  * Created by USER on 3/31/2018.
  */
 
-public class ListFoodPage extends Fragment implements OnItemRecyclerviewLisener, SearchView.OnQueryTextListener {
+public class ListFoodPage extends Fragment implements OnItemRecyclerViewLisener, SearchView.OnQueryTextListener, OnUpdateFromDialog {
 
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
@@ -43,10 +47,13 @@ public class ListFoodPage extends Fragment implements OnItemRecyclerviewLisener,
     private List<InvoiceDetails> detailsList;
     private String shopID = null;
     private String tableID = null;
+    // biến đếm số lượng sản phẩm trong giỏ hàng
+    private static int count = 0;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        ShowDialogCustom.removeSimpleProgressDialog();
         View view = inflater.inflate(R.layout.content_list_food, container, false);
         // hiển thị button back arrow trên toolbar
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -65,6 +72,8 @@ public class ListFoodPage extends Fragment implements OnItemRecyclerviewLisener,
             if (isSuccess) {
                 ListFoodAdapter adapter = new ListFoodAdapter(foodList, getActivity().getBaseContext(), this);
                 recyclerView.setAdapter(adapter);
+                detailsList = db.getAllListInvoiceDetails();
+                count = detailsList.size();
             } else {
                 foodList.add(new Food(null, "N/A", null, null, null, null, null, null, null));
                 ListFoodAdapter adapter = new ListFoodAdapter(foodList, getActivity().getBaseContext(), this);
@@ -100,8 +109,12 @@ public class ListFoodPage extends Fragment implements OnItemRecyclerviewLisener,
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main, menu);
-        MenuItem menuItem = menu.findItem(R.id.menu_action_searh);
-        searchView = (SearchView) menuItem.getActionView();
+        MenuItem menuItemCart = menu.findItem(R.id.menu_shopping_cart);
+        menuItemCart.setIcon(ConvertItemShoppingCart.convertLayoutToImage(getActivity().getBaseContext(), count,R.drawable.ic_shopping_cart));
+
+
+        MenuItem menuItemSearch = menu.findItem(R.id.menu_action_searh);
+        searchView = (SearchView) menuItemSearch.getActionView();
         // sự kiện tìm kiếm món ăn trên toolbar
         searchView.setOnQueryTextListener(this);
 
@@ -118,7 +131,9 @@ public class ListFoodPage extends Fragment implements OnItemRecyclerviewLisener,
             bundle.putString("shop_id", shopID);
             bundle.putString("table_id", tableID);
             dialog.setArguments(bundle);
-            dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "dialog shopping cart");
+            dialog.setTargetFragment(this, 1);
+//            dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "dialog shopping cart");
+            dialog.show(getFragmentManager(), "dialog shopping cart");
         }
         return super.onOptionsItemSelected(item);
     }
@@ -147,11 +162,12 @@ public class ListFoodPage extends Fragment implements OnItemRecyclerviewLisener,
                 // lấy số lượng món ăn sẽ được thêm vào danh sách của control numberpicker
                 int newQuanlity = numberPicker.getValue();
                 // lấy số lượng món ăn hiện tại mà danh sách lưu trữ
-                int oldQuanlity = Integer.parseInt(detailsList.get(position).Quanlity);
-                String quanlity = String.valueOf(oldQuanlity + newQuanlity);
+//                int oldQuanlity = Integer.parseInt(detailsList.get(position).getQuantity());
+                int oldQuanlity = db.getQuantityOfOneProductFromDetails(idFood);
+                int quanlity = oldQuanlity + newQuanlity;
 //                Log.d("quall", quanlity);
                 // kiểm tra cập nhật số lượng món ăn
-                boolean updateResult = db.updateQuanlityFoodInInvoice(idFood, quanlity);
+                boolean updateResult = db.updateQuanlityFoodInInvoice(foodList.get(position), quanlity);
                 if (updateResult) {
                     Toast.makeText(getActivity(), "Thêm thành công", Toast.LENGTH_SHORT).show();
                 } else {
@@ -166,7 +182,23 @@ public class ListFoodPage extends Fragment implements OnItemRecyclerviewLisener,
                     Toast.makeText(getActivity(), "Thêm thất bại", Toast.LENGTH_SHORT).show();
                 }
             }
+            // đếm số lượng sản phẩm trong giỏ hàng
+            count = detailsList.size();
+            // reset toolbar để hiện thị số lượng sản phẩm trong giỏ hàng khi thêm một sản phẩm
+            ((AppCompatActivity)getActivity()).supportInvalidateOptionsMenu();
+//            Log.d("quantity_invocie_detail", count + "");
         }
+    }
+
+    // các interface của OnItemRecyclerViewLisener
+    @Override
+    public void onNumberPickerValueChange(int value, int position) {
+
+    }
+
+    @Override
+    public void onImageButtonDelete(View view, int positon) {
+
     }
 
     // kiểm tra món ăn đã được gọi hay chưa
@@ -193,34 +225,44 @@ public class ListFoodPage extends Fragment implements OnItemRecyclerviewLisener,
         // truy vấn đến control numberpicker trên recyclerView
         // lấy số lượng trên control numberpicker
         NumberPicker numberPicker = recyclerView.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.number_picker_food_page);
-        int quanlity = numberPicker.getValue();
-        long totalPrice = Long.parseLong(foodList.get(position).SalePrice) * quanlity;
-        String Quanlity = quanlity + "";
+        int quantity = numberPicker.getValue();
+        long totalPrice = Long.parseLong(foodList.get(position).SalePrice) * quantity;
+        String Quanlity = quantity + "";
         String total = totalPrice + "";
         InvoiceDetails invoiceDetails = new InvoiceDetails(id, name, category, image, price, Quanlity, total);
         detailsList.add(invoiceDetails);
         return db.addInvoiceDetails(invoiceDetails);
     }
 
+    // hiển thị chi tiết sản phẩm lên dialog
     private void ShowDialogDescriptionFood(int position) throws ExecutionException, InterruptedException {
 
-        String id = foodList.get(position).ID;
-        String name = foodList.get(position).Name;
-        String price = foodList.get(position).SalePrice;
-        String description = foodList.get(position).Description;
-        String image = foodList.get(position).Image;
+        String id = foodList.get(position).getID();
+        String name = foodList.get(position).getName();
+        String category = foodList.get(position).getProductCategoryID();
+        String image = foodList.get(position).getImage();
+        String price = foodList.get(position).getSalePrice();
+        String description = foodList.get(position).getDescription();
+        String isDelete = foodList.get(position).getIsDelete();
+        String create_at = foodList.get(position).getCreate_at();
+        String update_at = foodList.get(position).getUpdate_at();
 
         ItemFoodDialog itemFoodDialog = new ItemFoodDialog();
 
         Bundle bundle = new Bundle();
         bundle.putString("id", id);
         bundle.putString("name_food", name);
+        bundle.putString("category", category);
         bundle.putString("price", price);
         bundle.putString("description", description);
         bundle.putString("image", image);
+        bundle.putString("isDelete", isDelete);
+        bundle.putString("created_at", image);
+        bundle.putString("updated_at", update_at);
 
         itemFoodDialog.setArguments(bundle);
-        itemFoodDialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "dialog description food");
+        itemFoodDialog.setTargetFragment(this, 1);
+        itemFoodDialog.show(getFragmentManager(), "dialog description food");
     }
 
     @Override
@@ -250,4 +292,28 @@ public class ListFoodPage extends Fragment implements OnItemRecyclerviewLisener,
         }
         return true;
     }
+
+    // nhận sự kiện khi xóa 1 sản phẩm từ giỏ hàng
+    // cập nhập lại item giỏ hàng
+    @Override
+    public void onDeleteFromDialog(boolean update) {
+        if (update == true){
+            // cập nhật lại item hiển thị
+            detailsList = db.getAllListInvoiceDetails();
+            count = detailsList.size();
+            ((AppCompatActivity)getActivity()).supportInvalidateOptionsMenu();
+        }
+        else {
+            Toast.makeText(getActivity().getBaseContext(), "Lisener", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // lắng nghe sự kiện khi thêm một món ăn trên dialog description food
+    @Override
+    public void onAddFoodFormDialog(boolean isAdd) {
+        detailsList = db.getAllListInvoiceDetails();
+        count = detailsList.size();
+        ((AppCompatActivity)getActivity()).supportInvalidateOptionsMenu();
+    }
+
 }

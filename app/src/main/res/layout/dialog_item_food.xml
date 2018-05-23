@@ -18,7 +18,7 @@
                 android:id="@+id/imgFood_item_description"
                 android:layout_width="@dimen/size100"
                 android:layout_height="@dimen/size100"
-                android:background="@mipmap/ic_launcher"/>
+                android:background="@drawable/image_food"/>
 
         </LinearLayout>
 

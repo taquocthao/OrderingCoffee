@@ -1,8 +1,6 @@
 package com.tathao.orderingcoffee.presenter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.tathao.orderingcoffee.Interface.OnItemRecyclerviewLisener;
+import com.tathao.orderingcoffee.Interface.OnItemRecyclerViewLisener;
 import com.tathao.orderingcoffee.R;
 import com.tathao.orderingcoffee.model.Food;
 import com.travijuu.numberpicker.library.NumberPicker;
@@ -30,12 +28,12 @@ public class ListFoodAdapter extends RecyclerView.Adapter<ListFoodAdapter.ViewHo
 
     private List<Food> listFood;
     private Context context;
-    private OnItemRecyclerviewLisener onItemRecyclerviewLisener;
+    private OnItemRecyclerViewLisener onItemRecyclerViewLisener;
 
-    public ListFoodAdapter(List<Food> listFood, Context context, OnItemRecyclerviewLisener onItemRecyclerviewLisener) {
+    public ListFoodAdapter(List<Food> listFood, Context context, OnItemRecyclerViewLisener onItemRecyclerViewLisener) {
         this.listFood = listFood;
         this.context = context;
-        this.onItemRecyclerviewLisener = onItemRecyclerviewLisener;
+        this.onItemRecyclerViewLisener = onItemRecyclerViewLisener;
     }
 
     @Override
@@ -53,22 +51,24 @@ public class ListFoodAdapter extends RecyclerView.Adapter<ListFoodAdapter.ViewHo
         holder.tvName.setText(listFood.get(position).Name);
         holder.tvPrice.setText(listFood.get(position).SalePrice);
 
-        byte[] decodeString = listFood.get(position).Image.getBytes();
-        Bitmap bitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
-        holder.image.setImageBitmap(bitmap);
+//        byte[] decodeString = listFood.get(position).Image.getBytes();
+//        Bitmap bitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+//        holder.image.setImageBitmap(bitmap);
+
+        holder.image.setImageResource(R.drawable.image_food);
 
         holder.numberPicker.getValue();
 
         holder.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onItemRecyclerviewLisener.onItemClick(view, position);
+                onItemRecyclerViewLisener.onItemClick(view, position);
             }
         });
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onItemRecyclerviewLisener.onItemClick(view, position);
+                onItemRecyclerViewLisener.onItemClick(view, position);
             }
         });
 
@@ -96,7 +96,7 @@ public class ListFoodAdapter extends RecyclerView.Adapter<ListFoodAdapter.ViewHo
             tvName = itemView.findViewById(R.id.tvTitleFood);
             //   category = itemView.findViewById(R.id.tvCategoryFood);
             tvPrice = itemView.findViewById(R.id.tvPriceFood);
-            numberPicker =  itemView.findViewById(R.id.number_picker_food_page);
+            numberPicker = itemView.findViewById(R.id.number_picker_food_page);
             btnAdd = (Button) itemView.findViewById(R.id.btnAddFoodToList);
             layout = (LinearLayout) itemView.findViewById(R.id.layout_item_food);
         }

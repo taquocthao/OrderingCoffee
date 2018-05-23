@@ -303,11 +303,6 @@ public class ProfileUser extends Fragment implements View.OnClickListener {
 
         }
 
-
-
-
-
-
     }
 
 }

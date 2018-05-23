@@ -1,6 +1,6 @@
 package com.tathao.orderingcoffee.view.Fragment;
 
-import android.app.Fragment;
+import android.app.Fragment;;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
+
 
 /**
  * Created by USER on 3/23/2018.
@@ -114,8 +115,9 @@ public class HomePage extends Fragment implements View.OnClickListener, AddFragm
         }
     }
 
+
     @Override
-    public void addFragment(Fragment fragment, String title) {
+    public void addFragment(android.app.Fragment fragment, String title) {
         (getActivity()).getFragmentManager().beginTransaction()
                 .replace(R.id.content, fragment)
                 .addToBackStack(getString(R.string.food_category_page))

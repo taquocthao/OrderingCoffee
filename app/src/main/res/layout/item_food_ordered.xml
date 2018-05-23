@@ -26,7 +26,7 @@
                 android:layout_width="@dimen/size100"
                 android:layout_height="@dimen/size100"
                 android:layout_margin="@dimen/size3"
-                android:background="@mipmap/ic_launcher" />
+                android:background="@drawable/image_food" />
 
         </LinearLayout>
 
@@ -55,7 +55,7 @@
                 android:background="@drawable/close_16" />
 
             <TextView
-                android:id="@+id/tvPriceFood_ordered"
+                android:id="@+id/tvTotaoPriceFood_ordered"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvNameFood_ordered"
@@ -68,7 +68,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tvPriceFood_ordered"
+                android:layout_below="@+id/tvTotaoPriceFood_ordered"
                 android:layout_marginLeft="@dimen/size10"
                 android:layout_marginTop="@dimen/size10"
                 android:orientation="horizontal">

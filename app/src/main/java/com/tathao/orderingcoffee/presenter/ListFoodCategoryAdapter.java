@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.tathao.orderingcoffee.Interface.OnItemRecyclerviewLisener;
+import com.tathao.orderingcoffee.Interface.OnItemRecyclerViewLisener;
 import com.tathao.orderingcoffee.R;
 import com.tathao.orderingcoffee.model.FoodCategory;
 
@@ -18,13 +18,13 @@ public class ListFoodCategoryAdapter extends RecyclerView.Adapter<ListFoodCatego
 
     private List<FoodCategory> foodCategories;
     private Context context;
-    private OnItemRecyclerviewLisener onItemRecyclerviewLisener;
+    private OnItemRecyclerViewLisener onItemRecyclerViewLisener;
 
 
-    public ListFoodCategoryAdapter(List<FoodCategory> foodCategories, Context context, OnItemRecyclerviewLisener onItemRecyclerviewLisener){
+    public ListFoodCategoryAdapter(List<FoodCategory> foodCategories, Context context, OnItemRecyclerViewLisener onItemRecyclerViewLisener){
         this.context = context;
         this.foodCategories = foodCategories;
-        this.onItemRecyclerviewLisener = onItemRecyclerviewLisener;
+        this.onItemRecyclerViewLisener = onItemRecyclerViewLisener;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ListFoodCategoryAdapter extends RecyclerView.Adapter<ListFoodCatego
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onItemRecyclerviewLisener.onItemClick(view, position);
+                onItemRecyclerViewLisener.onItemClick(view, position);
             }
         });
     }

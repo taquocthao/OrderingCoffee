@@ -6,17 +6,21 @@ public class InvoiceDetails {
     public String ProductCategoryID;
     public String Image;
     public String SalePrice;
-    public String Quanlity;
+    public String Quantity;
     public String TotalPrice;
 
 
-    public InvoiceDetails(String ID, String name, String productCategoryID, String image, String salePrice, String quanlity, String totalPrice) {
+    public InvoiceDetails(){
+        new InvoiceDetails(null,null,null,null,null,null,null);
+    }
+
+    public InvoiceDetails(String ID, String name, String productCategoryID, String image, String salePrice, String Quantity, String totalPrice) {
         this.ID = ID;
         Name = name;
         ProductCategoryID = productCategoryID;
         Image = image;
         SalePrice = salePrice;
-        Quanlity = quanlity;
+        this.Quantity = Quantity;
         TotalPrice = totalPrice;
     }
 
@@ -60,12 +64,12 @@ public class InvoiceDetails {
         SalePrice = salePrice;
     }
 
-    public String getQuanlity() {
-        return Quanlity;
+    public String getQuantity() {
+        return Quantity;
     }
 
-    public void setQuanlity(String quanlity) {
-        Quanlity = quanlity;
+    public void setQuantity(String Quantity) {
+        this.Quantity = Quantity;
     }
 
     public String getTotalPrice() {

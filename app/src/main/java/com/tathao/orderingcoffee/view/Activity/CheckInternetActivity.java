@@ -13,17 +13,24 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.tathao.orderingcoffee.R;
+import com.tathao.orderingcoffee.database.DBManager;
 
 public class CheckInternetActivity extends Activity {
 
     private Button btnTryConnect;
+    private DBManager dbManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_check_internet);
+        dbManager = new DBManager(getBaseContext());
 
-        if(isConnectInternet()){
+        if(isConnectInternet()){ // kiểm tra nếu có kết nối mạng
+            // xóa csdl đã tồn tại
+            dbManager.deleteTableFood();
+            // vào trang đăng nhập
             Intent intent = new Intent(CheckInternetActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();

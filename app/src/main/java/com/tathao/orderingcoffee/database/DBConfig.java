@@ -30,7 +30,7 @@ public class DBConfig {
     public static final String TABLE_INVOICES_DETAILS_CATEGORY = "category";
     public static final String TABLE_INVOICES_DETAILS_IMAGE = "image_details";
     public static final String TABLE_INVOICES_DETAILS_PRICE = "price_details";
-    public static final String TABLE_INVOICES_DETAILS_QUANLITY = "quanlity";
+    public static final String TABLE_INVOICES_DETAILS_QUANTITY = "quantity";
     public static final String TABLE_INVOICES_DETAILS_TOTAL_PRICE = "total_price";
     // Create Table InvoiceDetails
     public static final String SQL_CREATE_TABLE_INVOICE_DETAILS = "CREATE TABLE " + TABLE_INVOICES_DETAILS + " (" +
@@ -39,14 +39,19 @@ public class DBConfig {
             TABLE_INVOICES_DETAILS_CATEGORY + " TEXT, " +
             TABLE_INVOICES_DETAILS_IMAGE + " TEXT, " +
             TABLE_INVOICES_DETAILS_PRICE + " TEXT, " +
-            TABLE_INVOICES_DETAILS_QUANLITY + " TEXT, " +
+            TABLE_INVOICES_DETAILS_QUANTITY + " TEXT, " +
             TABLE_INVOICES_DETAILS_TOTAL_PRICE + " TEXT)";
     // Drop Table
     public static final String DROP_TABLE_INVOICE_DETAILS = "DROP TABLE IF EXISTS " + TABLE_INVOICES_DETAILS;
-    // Query table food
+    // Query table invoice details
     public static final String SQL_QUERY_INVOICES_DETAILS = "SELECT * FROM " + TABLE_INVOICES_DETAILS;
+
+    // try vấn giá sản phẩm thông qua id
+    public static final String SQL_QUERY_PRICE_FOOD = "SELECT "+TABLE_FOOD_PRICE+
+            " FROM " + TABLE_FOOD +
+            " WHERE " +TABLE_FOOD_ID + " = ";
     // get quantity food
-    public static final String SQL_QUERY_INVOICES_DETAILS_QUANLITY = "SELECT "+TABLE_INVOICES_DETAILS_QUANLITY+
+    public static final String SQL_QUERY_INVOICES_DETAILS_QUANLITY = "SELECT "+TABLE_INVOICES_DETAILS_QUANTITY+
                                                                      " FROM " + TABLE_INVOICES_DETAILS +
                                                                      " WHERE " +TABLE_INVOICES_DETAILS_ID + " = ";
 

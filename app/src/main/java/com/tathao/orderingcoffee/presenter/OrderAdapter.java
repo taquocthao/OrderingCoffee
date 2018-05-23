@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tathao.orderingcoffee.Interface.OnNumberPickerValueChangeLisener;
+import com.tathao.orderingcoffee.Interface.OnItemRecyclerViewLisener;
 import com.tathao.orderingcoffee.R;
 import com.tathao.orderingcoffee.database.DBManager;
 import com.tathao.orderingcoffee.model.InvoiceDetails;
@@ -22,13 +22,13 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     private List<InvoiceDetails> foods;
     private Context context;
-    private OnNumberPickerValueChangeLisener valueChangedListener;
+    private OnItemRecyclerViewLisener onItemRecyclerViewLisener;
     private DBManager db;
 
-    public OrderAdapter(List<InvoiceDetails> foods, Context context, OnNumberPickerValueChangeLisener valueChangedListener) {
+    public OrderAdapter(List<InvoiceDetails> foods, Context context, OnItemRecyclerViewLisener onItemRecyclerViewLisener) {
         this.foods = foods;
         this.context = context;
-        this.valueChangedListener = valueChangedListener;
+        this.onItemRecyclerViewLisener = onItemRecyclerViewLisener;
         db = new DBManager(context);
     }
 
@@ -43,23 +43,19 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         holder.name.setText(foods.get(position).Name);
-        holder.price.setText(foods.get(position).getTotalPrice());
-        holder.quanlity.setValue(Integer.parseInt(foods.get(position).getQuanlity()));
-        holder.quanlity.setValueChangedListener(new ValueChangedListener() {
+        holder.totalPrice.setText(foods.get(position).getTotalPrice());
+        holder.quantity.setValue(Integer.parseInt(foods.get(position).getQuantity()));
+        holder.quantity.setValueChangedListener(new ValueChangedListener() {
             @Override
             public void valueChanged(int value, ActionEnum action) {
-                double price = Double.parseDouble(foods.get(position).SalePrice) * value;
-                holder.price.setText(price + "");
-                valueChangedListener.onValueChange(value, position);
+                onItemRecyclerViewLisener.onNumberPickerValueChange(value, position);
             }
         });
-//        double price  = Double.parseDouble(foods.get(position).SalePrice) * holder.quanlity.getValue();
-//        holder.price.setText(price + "");
+
         holder.imgDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String idFood = foods.get(position).getID();
-                db.deleteInvoiceDetailsById(idFood);
+                onItemRecyclerViewLisener.onImageButtonDelete(v, position);
             }
         });
         holder.image.setImageBitmap(null);
@@ -74,19 +70,17 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView name;
-        private TextView price;
-        private NumberPicker quanlity;
+        private NumberPicker quantity;
         private ImageView image, imgDeleteButton;
-//        private TextView totalPrice;
+        private TextView totalPrice;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            name = (TextView) itemView.findViewById(R.id.tvNameFood_ordered);
-            price = (TextView) itemView.findViewById(R.id.tvPriceFood_ordered);
-            quanlity = (NumberPicker) itemView.findViewById(R.id.number_picker_shopping);
-            quanlity.setMin(1);
             image = (ImageView) itemView.findViewById(R.id.imgFood_ordered);
-//            totalPrice = (TextView)itemView.findViewById(R.id.tvTotalPrice_shopping);
+            name = (TextView) itemView.findViewById(R.id.tvNameFood_ordered);
+            totalPrice = (TextView)itemView.findViewById(R.id.tvTotaoPriceFood_ordered);
+            quantity = (NumberPicker) itemView.findViewById(R.id.number_picker_shopping);
+            quantity.setMin(1);
             imgDeleteButton = (ImageView)itemView.findViewById(R.id.imgDelete_ordered);
         }
     }

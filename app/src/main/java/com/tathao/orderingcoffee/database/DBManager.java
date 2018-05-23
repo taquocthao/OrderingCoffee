@@ -102,7 +102,7 @@ public class DBManager extends SQLiteOpenHelper{
         values.put(DBConfig.TABLE_INVOICES_DETAILS_CATEGORY, details.getProductCategoryID());
         values.put(DBConfig.TABLE_INVOICES_DETAILS_IMAGE, details.getImage());
         values.put(DBConfig.TABLE_INVOICES_DETAILS_PRICE, details.getSalePrice());
-        values.put(DBConfig.TABLE_INVOICES_DETAILS_QUANLITY, details.getQuanlity());
+        values.put(DBConfig.TABLE_INVOICES_DETAILS_QUANTITY, details.getQuantity());
         values.put(DBConfig.TABLE_INVOICES_DETAILS_TOTAL_PRICE, details.getTotalPrice());
         long affectRow = db.insert(DBConfig.TABLE_INVOICES_DETAILS, null, values);
         db.close();
@@ -148,25 +148,87 @@ public class DBManager extends SQLiteOpenHelper{
     }
 
     // cập nhật số lượng thức ăn trong danh sách chi tiết hóa đơn
-    public boolean updateQuanlityFoodInInvoice(String idFood, String quanlity){
+    public boolean updateQuanlityFoodInInvoice(Food food, int quantity){
         db = this.getWritableDatabase();
-
+        // lấy giá sản phẩm của đối tượng đó
+        long price = Long.parseLong(food.getSalePrice());
+        // tính tổng giá = giá tiền * số lượng
+        long totalPrice = price * quantity;
+//        Log.d("toa" , totalPrice +"");
+        // truyền giá trị {số lượng, tổng tiền} để cập nhật lại thông tin chi tiết hóa đơn
         ContentValues values = new ContentValues();
-        values.put(DBConfig.TABLE_INVOICES_DETAILS_QUANLITY, quanlity);
+        values.put(DBConfig.TABLE_INVOICES_DETAILS_QUANTITY, quantity);
+        values.put(DBConfig.TABLE_INVOICES_DETAILS_TOTAL_PRICE, totalPrice);
+        // tính lại tổng tiền của thực phẩm
+        int affectRow = db.update(DBConfig.TABLE_INVOICES_DETAILS, values, DBConfig.TABLE_INVOICES_DETAILS_ID+"=?",new String[]{food.getID()});
+        db.close();
+        return affectRow >0;
+    }
+
+    // cập nhật số lượng thức ăn trong danh sách chi tiết hóa đơn
+    public boolean updateQuanlityFoodInInvoice(InvoiceDetails details, int quantity){
+        db = this.getWritableDatabase();
+        // lấy giá sản phẩm của đối tượng đó
+        long price = Long.parseLong(details.getSalePrice());
+        // tính tổng giá = giá tiền * số lượng
+        long totalPrice = price * quantity;
+//        Log.d("toa" , totalPrice +"");
+        // truyền giá trị {số lượng, tổng tiền} để cập nhật lại thông tin chi tiết hóa đơn
+        ContentValues values = new ContentValues();
+        values.put(DBConfig.TABLE_INVOICES_DETAILS_QUANTITY, quantity);
+        values.put(DBConfig.TABLE_INVOICES_DETAILS_TOTAL_PRICE, totalPrice);
+        // tính lại tổng tiền của thực phẩm
+        int affectRow = db.update(DBConfig.TABLE_INVOICES_DETAILS, values, DBConfig.TABLE_INVOICES_DETAILS_ID+"=?",new String[]{details.getID()});
+        db.close();
+        return affectRow >0;
+    }
+
+
+    // cập nhật số lượng thức ăn trong danh sách chi tiết hóa đơn thông qua idFood
+    public boolean updateQuanlityFoodInInvoice(String idFood, int quantity){
+        db = this.getWritableDatabase();
+        // lấy giá sản phẩm của đối tượng đó
+        long price = getSalePriceOfFood(idFood);
+        // tính tổng giá = giá tiền * số lượng
+        long totalPrice = price * quantity;
+//        Log.d("toa" , totalPrice +"");
+        // truyền giá trị {số lượng, tổng tiền} để cập nhật lại thông tin chi tiết hóa đơn
+        ContentValues values = new ContentValues();
+        values.put(DBConfig.TABLE_INVOICES_DETAILS_QUANTITY, quantity);
+        values.put(DBConfig.TABLE_INVOICES_DETAILS_TOTAL_PRICE, totalPrice);
+        // tính lại tổng tiền của thực phẩm
         int affectRow = db.update(DBConfig.TABLE_INVOICES_DETAILS, values, DBConfig.TABLE_INVOICES_DETAILS_ID+"=?",new String[]{idFood});
         db.close();
         return affectRow >0;
     }
 
     // lấy số lượng của một món ăn được gọi
-    public int getQuanlityFoodFromDetails(String idFood){
+    public int getQuantityOfOneProductFromDetails(String idFood){
         db = getReadableDatabase();
         String sql = DBConfig.SQL_QUERY_INVOICES_DETAILS_QUANLITY + idFood;
         Cursor cursor = db.rawQuery(sql, null);
-        String quanlity = cursor.getString(0);
+        String quanlity = "0";
+        if(cursor.moveToFirst()){
+           quanlity = cursor.getString(0);
+        }
         db.close();
         cursor.close();
         return Integer.parseInt(quanlity);
+    }
+
+
+    // lấy số lượng của một món ăn được gọi
+    public long getSalePriceOfFood(String idFood){
+        db = getReadableDatabase();
+        String sql = DBConfig.SQL_QUERY_PRICE_FOOD + idFood;
+        Cursor cursor = db.rawQuery(sql, null);
+        long salePrice = 0;
+        if(cursor.moveToFirst()){
+            salePrice = Long.parseLong(cursor.getString(0));
+        }
+        db.close();
+        cursor.close();
+        return salePrice;
     }
 
     // tính tổng giá tiền
@@ -178,9 +240,6 @@ public class DBManager extends SQLiteOpenHelper{
         }
         return total;
     }
-
-
-
 
 
 }

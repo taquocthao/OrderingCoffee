@@ -12,8 +12,9 @@
         android:id="@+id/menu_shopping_cart"
         android:orderInCategory="100"
         android:icon="@drawable/ic_shopping_cart"
+        android:actionLayout="@layout/layout_shopping_cart_menu_icon"
         android:title="@string/menu_shopping_cart"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
 
 </menu>
