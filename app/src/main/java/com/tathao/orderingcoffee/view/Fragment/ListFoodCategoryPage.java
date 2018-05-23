@@ -207,6 +207,7 @@ public class ListFoodCategoryPage extends Fragment implements AddFragment, OnIte
         bundle.putString("table_id", tableID);
         foodPage.setArguments(bundle);
         addFragment(foodPage, getString(R.string.menu));
+        
     }
 
     // Kiểm tra việc tải ds thực phẩm từ server
