@@ -20,11 +20,11 @@ import com.tathao.orderingcoffee.Interface.OnItemRecyclerViewLisener;
 import com.tathao.orderingcoffee.Interface.OnUpdateFromDialog;
 import com.tathao.orderingcoffee.R;
 import com.tathao.orderingcoffee.database.DBManager;
-import com.tathao.orderingcoffee.model.ConvertItemShoppingCart;
-import com.tathao.orderingcoffee.model.Food;
-import com.tathao.orderingcoffee.model.InvoiceDetails;
-import com.tathao.orderingcoffee.model.ShowDialogCustom;
-import com.tathao.orderingcoffee.presenter.ListFoodAdapter;
+import com.tathao.orderingcoffee.model.entity.ConvertItemShoppingCart;
+import com.tathao.orderingcoffee.model.entity.Food;
+import com.tathao.orderingcoffee.model.entity.InvoiceDetails;
+import com.tathao.orderingcoffee.model.entity.ShowDialogCustom;
+import com.tathao.orderingcoffee.presenter.Adapter.ListFoodAdapter;
 import com.tathao.orderingcoffee.view.Dialog.ItemFoodDialog;
 import com.tathao.orderingcoffee.view.Dialog.ShoppingCartDialog;
 import com.travijuu.numberpicker.library.NumberPicker;
@@ -235,7 +235,8 @@ public class ListFoodPage extends Fragment implements OnItemRecyclerViewLisener,
     }
 
     // hiển thị chi tiết sản phẩm lên dialog
-    private void ShowDialogDescriptionFood(int position) throws ExecutionException, InterruptedException {
+    private void ShowDialogDescriptionFood(int position) throws ExecutionException, InterruptedException
+    {
 
         String id = foodList.get(position).getID();
         String name = foodList.get(position).getName();

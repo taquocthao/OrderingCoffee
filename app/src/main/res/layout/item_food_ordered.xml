@@ -26,7 +26,7 @@
                 android:layout_width="@dimen/size100"
                 android:layout_height="@dimen/size100"
                 android:layout_margin="@dimen/size3"
-                android:background="@drawable/image_food" />
+                android:background="@drawable/image_food"/>
 
         </LinearLayout>
 

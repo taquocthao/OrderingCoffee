@@ -41,7 +41,8 @@ public class Client extends AsyncTask {
     }
 
     @Override
-    protected Object doInBackground(Object[] objects) {
+    protected Object doInBackground(Object[] objects)
+    {
         if (this.method == "GET") {
             try {
                 this.performGet(new APICallBack() {
@@ -57,6 +58,18 @@ public class Client extends AsyncTask {
 
             try {
                 performPost(new APICallBack() {
+                    @Override
+                    public void onSuccess(String result) {
+                        Client.this.result = result;
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (this.method == "PUT") {
+
+            try {
+                performPut(new APICallBack() {
                     @Override
                     public void onSuccess(String result) {
                         Client.this.result = result;
@@ -112,6 +125,34 @@ public class Client extends AsyncTask {
         Response response = this.client.newCall(request).execute();
         callBack.onSuccess(response.body().string());
     }
+
+    public void performPut(APICallBack callBack) throws IOException {
+
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        if (this.params.size() > 0) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                formBuilder.add(entry.getKey(), entry.getValue());
+            }
+        }
+        RequestBody requestBody = formBuilder.build();
+        Request request;
+        if (userDataStoreStore.isAuthenticaed()) {
+            request = new Request.Builder()
+                    .url(this.url)
+                    .header("Authorization", "Bearer " + new UserDataStore(this.context).getToken())
+                    .put(requestBody)
+                    .build();
+        } else {
+            request = new Request.Builder()
+                    .url(this.url)
+                    .put(requestBody)
+                    .build();
+        }
+
+        Response response = this.client.newCall(request).execute();
+        callBack.onSuccess(response.body().string());
+    }
+
 
     @Override
     protected void onPostExecute(Object o) {

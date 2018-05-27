@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/background_simple_color_cream_white"
-    tools:context="com.tathao.orderingcoffee.view.Activity.LoginActivity">
+    tools:context="com.tathao.orderingcoffee.view.LoginView.LoginActivity">
 
 
     <LinearLayout

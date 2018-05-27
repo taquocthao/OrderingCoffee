@@ -22,6 +22,8 @@ public class DBConfig {
     public static final String DROP_TABLE_FOOD = "DROP TABLE IF EXISTS " + TABLE_FOOD;
     // Query table food
     public static final String SQL_QUERY_FOOD = "SELECT * FROM " + TABLE_FOOD + " WHERE " + TABLE_FOOD_CATEGORY + " = ";
+    // lấy ra món ăn bằng id món ăn
+    public static final String SQL_QUERY_FOOD_BY_ID = "SELECT * FROM " + TABLE_FOOD + " WHERE " + TABLE_FOOD_ID+ " = ";
 
     //    Table invoice details
     public static final String TABLE_INVOICES_DETAILS = "InvoiceDetails";

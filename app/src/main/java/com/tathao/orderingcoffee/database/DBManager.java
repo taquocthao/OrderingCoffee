@@ -6,8 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.tathao.orderingcoffee.model.Food;
-import com.tathao.orderingcoffee.model.InvoiceDetails;
+import com.tathao.orderingcoffee.model.entity.Food;
+import com.tathao.orderingcoffee.model.entity.InvoiceDetails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +26,14 @@ public class DBManager extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(DBConfig.SQL_CREATE_TABLE_FOOD);
         db.execSQL(DBConfig.SQL_CREATE_TABLE_INVOICE_DETAILS);
+        db.execSQL(ConfigProductOrder.SQL_CREATE_TABLE_PRODUCT_ORDER);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(DBConfig.DROP_TABLE_FOOD);
         db.execSQL(DBConfig.DROP_TABLE_INVOICE_DETAILS);
+        db.execSQL(ConfigProductOrder.DROP_TABLE_PRODUCT_ORDER_HISTORY);
         onCreate(db);
     }
 
@@ -77,6 +79,7 @@ public class DBManager extends SQLiteOpenHelper{
         return foods;
     }
 
+
     // Xóa danh sách món ăn
     public boolean deleteTableFood(){
         SQLiteDatabase db = getWritableDatabase();
@@ -108,6 +111,7 @@ public class DBManager extends SQLiteOpenHelper{
         db.close();
         return affectRow > 0;
     }
+
 
     // lấy tất cả danh sách chi tiết hóa đơn
     public List<InvoiceDetails> getAllListInvoiceDetails() {
@@ -183,25 +187,6 @@ public class DBManager extends SQLiteOpenHelper{
         return affectRow >0;
     }
 
-
-    // cập nhật số lượng thức ăn trong danh sách chi tiết hóa đơn thông qua idFood
-    public boolean updateQuanlityFoodInInvoice(String idFood, int quantity){
-        db = this.getWritableDatabase();
-        // lấy giá sản phẩm của đối tượng đó
-        long price = getSalePriceOfFood(idFood);
-        // tính tổng giá = giá tiền * số lượng
-        long totalPrice = price * quantity;
-//        Log.d("toa" , totalPrice +"");
-        // truyền giá trị {số lượng, tổng tiền} để cập nhật lại thông tin chi tiết hóa đơn
-        ContentValues values = new ContentValues();
-        values.put(DBConfig.TABLE_INVOICES_DETAILS_QUANTITY, quantity);
-        values.put(DBConfig.TABLE_INVOICES_DETAILS_TOTAL_PRICE, totalPrice);
-        // tính lại tổng tiền của thực phẩm
-        int affectRow = db.update(DBConfig.TABLE_INVOICES_DETAILS, values, DBConfig.TABLE_INVOICES_DETAILS_ID+"=?",new String[]{idFood});
-        db.close();
-        return affectRow >0;
-    }
-
     // lấy số lượng của một món ăn được gọi
     public int getQuantityOfOneProductFromDetails(String idFood){
         db = getReadableDatabase();
@@ -239,6 +224,52 @@ public class DBManager extends SQLiteOpenHelper{
             total += Long.parseLong(x.TotalPrice.trim());
         }
         return total;
+    }
+
+    public void addFoodOrderHistory(List<InvoiceDetails> invoiceDetails){
+        db = this.getWritableDatabase();
+        for(InvoiceDetails details : invoiceDetails){
+            ContentValues values = new ContentValues();
+            values.put(ConfigProductOrder.TABLE_PRODUCT_ORDER_HISTORY_ID, details.getID());
+            values.put(ConfigProductOrder.TABLE_PRODUCT_ORDER_HISTORY_NAME, details.getName());
+            values.put(ConfigProductOrder.TABLE_PRODUCT_ORDER_HISTORY_CATEGORY, details.getProductCategoryID());
+            values.put(ConfigProductOrder.TABLE_PRODUCT_ORDER_HISTORY_IMAGE, details.getImage());
+            values.put(ConfigProductOrder.TABLE_PRODUCT_ORDER_HISTORY_PRICE, details.getSalePrice());
+            values.put(ConfigProductOrder.TABLE_PRODUCT_ORDER_HISTORY_QUANTITY, details.getQuantity());
+            values.put(ConfigProductOrder.TABLE_PRODUCT_ORDER_HISTORY_TOTAL_PRICE, details.getTotalPrice());
+            db.insert(ConfigProductOrder.TABLE_PRODUCT_ORDER_HISTORY, null, values);
+        }
+        db.close();
+    }
+
+    public List<InvoiceDetails> getListProductOrderHistory(){
+        db = this.getReadableDatabase();
+        List<InvoiceDetails> productList = new ArrayList<>();
+        String sql = ConfigProductOrder.SQL_QUERY_TABLE_PRODUCT_ORDER;
+        Cursor cursor = db.rawQuery(sql, null);
+        if (cursor.moveToFirst()) {
+            do {
+                String id = cursor.getString(0);
+                String name = cursor.getString(1);
+                String productCategoryID = cursor.getString(2);
+                String image = cursor.getString(3);
+                String price = cursor.getString(4);
+                String quanlity = cursor.getString(5);
+                String totalPrice = cursor.getString(6);
+                InvoiceDetails details = new InvoiceDetails(id, name, productCategoryID, image,price, quanlity, totalPrice);
+                productList.add(details);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return productList;
+    }
+
+    // xóa tất cả chi tiết hóa đơn
+    public boolean deleteProductOrderHistory() {
+        db = this.getWritableDatabase();
+        int affectRow = db.delete(ConfigProductOrder.TABLE_PRODUCT_ORDER_HISTORY, null, null);
+        return affectRow > 0;
     }
 
 

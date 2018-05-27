@@ -5,34 +5,80 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true">
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/size10"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recylerViewListFood_ordered"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </android.support.v7.widget.RecyclerView>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/size60"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_gravity="bottom">
-
-        <Button
-            android:id="@+id/btnBackToHome_ordered"
+        <LinearLayout
+            android:id="@+id/layout_shopping_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/background_button_login"
-            android:text="@string/back_to_home"
-            android:layout_marginBottom="@dimen/size8"/>
+            android:layout_marginBottom="@dimen/size10"
+            android:layout_above="@+id/layout_shopping_totalPrice">
 
-    </LinearLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recylerViewListOrder_OrderHistory"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_shopping_totalPrice"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_above="@+id/layout_shopping_button"
+            android:background="@drawable/background_white"
+            android:layout_marginBottom="@dimen/size3">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total:"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvTotalPrice_OrderHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="price"
+                android:textSize="@dimen/size20"
+                android:textColor="@color/colorRed"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_shopping_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/size3"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/btnBackToHome_orderHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/back_to_home"
+                android:background="@drawable/background_button_login"/>
+
+            <Button
+                android:id="@+id/btnPay_OrderHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Pay"
+                android:background="@drawable/background_button_login"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
 </RelativeLayout>

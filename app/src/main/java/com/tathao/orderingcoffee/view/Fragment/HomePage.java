@@ -17,6 +17,7 @@ import com.tathao.orderingcoffee.Interface.AddFragment;
 import com.tathao.orderingcoffee.NetworkAPI.Client;
 import com.tathao.orderingcoffee.NetworkAPI.Config;
 import com.tathao.orderingcoffee.R;
+import com.tathao.orderingcoffee.view.Fragment.CategoryFoodPage.ListFoodCategoryPage;
 
 import org.json.JSONArray;
 import org.json.JSONException;

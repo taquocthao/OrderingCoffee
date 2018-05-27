@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -22,10 +21,10 @@ import com.tathao.orderingcoffee.NetworkAPI.Config;
 import com.tathao.orderingcoffee.NetworkAPI.UserDataStore;
 import com.tathao.orderingcoffee.R;
 import com.tathao.orderingcoffee.database.DBManager;
-import com.tathao.orderingcoffee.model.Invoice;
-import com.tathao.orderingcoffee.model.InvoiceDetails;
-import com.tathao.orderingcoffee.model.Product;
-import com.tathao.orderingcoffee.presenter.OrderAdapter;
+import com.tathao.orderingcoffee.model.entity.Invoice;
+import com.tathao.orderingcoffee.model.entity.InvoiceDetails;
+import com.tathao.orderingcoffee.model.entity.Product;
+import com.tathao.orderingcoffee.presenter.Adapter.OrderAdapter;
 import com.travijuu.numberpicker.library.NumberPicker;
 
 import org.json.JSONException;
@@ -122,6 +121,7 @@ public class ShoppingCartDialog extends DialogFragment implements View.OnClickLi
             if (invoiceDetails.size() <= 0) { // nếu danh sách shopping cart rỗng -> Toast
                 Toast.makeText(getActivity().getBaseContext(), "Bạn chưa gọi món", Toast.LENGTH_SHORT).show();
             } else { // nếu danh sách shopping cart đã có món ăn -> bắt đầu gọi món
+
                 // lấy thông tin id, quantity
                 // gán vào danh sách product. danh sách này sẽ được gửi lên hệ thống
                 for (InvoiceDetails x : invoiceDetails) {
@@ -138,7 +138,7 @@ public class ShoppingCartDialog extends DialogFragment implements View.OnClickLi
                     Invoice invoice = new Invoice(shopID, tableID, user_id, productList);
                     // chuyển object java về kiêu String dạng json
                     String response = parseToJson(invoice);
-                    Log.d("response", response);
+//                    Log.d("response", response);
                     // tạo một params truyền giá trị lên server
                     HashMap<String, String> params = new HashMap<>();
                     params.put("invocice_details", response);
@@ -146,6 +146,8 @@ public class ShoppingCartDialog extends DialogFragment implements View.OnClickLi
                     String url = Config.urlAddSaleBill;
                     // gửi giá trị (danh sách order) lên server
                     String jsonReponse = new Client(url, Client.POST, params, getActivity().getBaseContext()).execute().get().toString();
+                   // thêm danh sách đã gọi vào lịch sử gọi món
+                    db.addFoodOrderHistory(invoiceDetails);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {

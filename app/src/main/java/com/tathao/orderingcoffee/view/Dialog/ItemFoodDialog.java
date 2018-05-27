@@ -15,8 +15,8 @@ import android.widget.Toast;
 import com.tathao.orderingcoffee.Interface.OnUpdateFromDialog;
 import com.tathao.orderingcoffee.R;
 import com.tathao.orderingcoffee.database.DBManager;
-import com.tathao.orderingcoffee.model.Food;
-import com.tathao.orderingcoffee.model.InvoiceDetails;
+import com.tathao.orderingcoffee.model.entity.Food;
+import com.tathao.orderingcoffee.model.entity.InvoiceDetails;
 import com.travijuu.numberpicker.library.NumberPicker;
 
 import java.util.ArrayList;
