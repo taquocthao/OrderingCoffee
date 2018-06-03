@@ -19,6 +19,7 @@ import com.tathao.orderingcoffee.model.entity.Food;
 import com.tathao.orderingcoffee.model.entity.InvoiceDetails;
 import com.travijuu.numberpicker.library.NumberPicker;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +60,9 @@ public class ItemFoodDialog extends DialogFragment {
             create_at = getArguments().getString("created_at");
             update_at = getArguments().getString("updated_at");
             tvName.setText(name);
-            tvPrice.setText(price);
+            NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
+            long priceOfFood = Long.parseLong(price);
+            tvPrice.setText(numberFormat.format(priceOfFood));
             tvDescription.setText(description);
             image = getArguments().getString("image");
 //            if(image != null){

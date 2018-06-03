@@ -2,8 +2,12 @@ package com.tathao.orderingcoffee.view.Dialog;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,17 +29,19 @@ import com.tathao.orderingcoffee.model.entity.Invoice;
 import com.tathao.orderingcoffee.model.entity.InvoiceDetails;
 import com.tathao.orderingcoffee.model.entity.Product;
 import com.tathao.orderingcoffee.presenter.Adapter.OrderAdapter;
+import com.tathao.orderingcoffee.view.Fragment.OrderHistory.OrderHistory;
 import com.travijuu.numberpicker.library.NumberPicker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class ShoppingCartDialog extends DialogFragment implements View.OnClickListener, OnItemRecyclerViewLisener{
+public class ShoppingCartDialog extends DialogFragment implements View.OnClickListener, OnItemRecyclerViewLisener {
 
 
     private Button btnOrder, btnCancel;
@@ -50,11 +56,11 @@ public class ShoppingCartDialog extends DialogFragment implements View.OnClickLi
     private String shopID = null;
     private String tableID = null;
     private OnUpdateFromDialog onUpdateFromDialog;
-
+    private Fragment fragment;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        onUpdateFromDialog  = (OnUpdateFromDialog) getTargetFragment();
+        onUpdateFromDialog = (OnUpdateFromDialog) getTargetFragment();
         final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         dialog.setTitle("Shopping Carts");
@@ -63,7 +69,7 @@ public class ShoppingCartDialog extends DialogFragment implements View.OnClickLi
         // khởi tạo
         init(view);
         // kiểm tra thông tin gửi lên từ foodpage
-        if(getArguments() != null){ //nếu khác rỗng
+        if (getArguments() != null) { //nếu khác rỗng
             shopID = getArguments().getString("shop_id");
             tableID = getArguments().getString("table_id");
             // tải danh sách món ăn sẽ được order
@@ -106,14 +112,15 @@ public class ShoppingCartDialog extends DialogFragment implements View.OnClickLi
         recyclerView.setAdapter(adapter);
         // hiển thị tổng tiền
         long total = db.calculateTotalPrice(invoiceDetails);
-        tvTotalPrice.setText(total +"");
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
+        tvTotalPrice.setText(numberFormat.format(total));
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.btnCancel_shopping) { // click button cancel để tắt giỏ hàng
-           onUpdateFromDialog.onDeleteFromDialog(true);
+            onUpdateFromDialog.onDeleteFromDialog(true);
             // đóng dialog
             dismiss();
         } else if (id == R.id.btnOrder_shopping) { // click button order để gọi món lên hệ thống
@@ -146,7 +153,7 @@ public class ShoppingCartDialog extends DialogFragment implements View.OnClickLi
                     String url = Config.urlAddSaleBill;
                     // gửi giá trị (danh sách order) lên server
                     String jsonReponse = new Client(url, Client.POST, params, getActivity().getBaseContext()).execute().get().toString();
-                   // thêm danh sách đã gọi vào lịch sử gọi món
+                    // thêm danh sách đã gọi vào lịch sử gọi món
                     db.addFoodOrderHistory(invoiceDetails);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -160,11 +167,23 @@ public class ShoppingCartDialog extends DialogFragment implements View.OnClickLi
             db.deleteInvoiceDetails();
             onUpdateFromDialog.onDeleteFromDialog(true);
             dismiss();
+            addFragmentOrderHistory();
         }
-
     }
 
-
+    private void addFragmentOrderHistory(){
+        fragment = new Fragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        fragment = fragmentManager.findFragmentByTag("fragment order history");
+        if (fragment == null) {
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragment = new OrderHistory();
+            fragmentTransaction.replace(R.id.content, fragment, "fragment order history")
+                    .addToBackStack("shoppingCart")
+                    .commit();
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Lịch sử gọi món");
+        }
+    }
 
     // chuyển object java về kiểu string dạng json, sử dụng thư viện moshi
     private String parseToJson(Invoice invoice) {
@@ -179,6 +198,7 @@ public class ShoppingCartDialog extends DialogFragment implements View.OnClickLi
     public void onItemClick(View view, int position) {
 
     }
+
     // sự kiện thay đổi số lượng thực phẩm trong giỏ hàng
     @Override
     public void onNumberPickerValueChange(int value, int position) {
@@ -186,9 +206,9 @@ public class ShoppingCartDialog extends DialogFragment implements View.OnClickLi
         updateTotalPriceOnValueChange(value, position);
     }
 
-    private void updateTotalPriceOnValueChange(int value, int position){
+    private void updateTotalPriceOnValueChange(int value, int position) {
         // cập nhật số lượng thực phẩm
-        db.updateQuanlityFoodInInvoice(invoiceDetails.get(position),value);
+        db.updateQuanlityFoodInInvoice(invoiceDetails.get(position), value);
         LoadListFood();
     }
 

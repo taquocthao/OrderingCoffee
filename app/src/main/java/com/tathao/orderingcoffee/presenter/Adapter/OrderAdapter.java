@@ -19,6 +19,7 @@ import com.travijuu.numberpicker.library.Interface.ValueChangedListener;
 import com.travijuu.numberpicker.library.NumberPicker;
 
 import java.io.UnsupportedEncodingException;
+import java.text.NumberFormat;
 import java.util.List;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
@@ -46,7 +47,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         holder.name.setText(foods.get(position).Name);
-        holder.totalPrice.setText(foods.get(position).getTotalPrice());
+        long totalPrice = Long.parseLong(foods.get(position).getTotalPrice());
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
+        holder.totalPrice.setText(numberFormat.format(totalPrice));
         holder.quantity.setValue(Integer.parseInt(foods.get(position).getQuantity()));
         holder.quantity.setValueChangedListener(new ValueChangedListener() {
             @Override

@@ -17,6 +17,7 @@ import com.tathao.orderingcoffee.R;
 import com.tathao.orderingcoffee.model.entity.Food;
 import com.travijuu.numberpicker.library.NumberPicker;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 /**
@@ -49,7 +50,9 @@ public class ListFoodAdapter extends RecyclerView.Adapter<ListFoodAdapter.ViewHo
     public void onBindViewHolder(ViewHodler holder, final int position) {
 
         holder.tvName.setText(listFood.get(position).Name);
-        holder.tvPrice.setText(listFood.get(position).SalePrice);
+        long totalPrice = Long.parseLong(listFood.get(position).getSalePrice());
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
+        holder.tvPrice.setText(numberFormat.format(totalPrice));
 
 //        byte[] decodeString = listFood.get(position).Image.getBytes();
 //        Bitmap bitmap = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);

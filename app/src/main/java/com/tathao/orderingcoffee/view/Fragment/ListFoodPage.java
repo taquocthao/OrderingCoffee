@@ -177,7 +177,7 @@ public class ListFoodPage extends Fragment implements OnItemRecyclerViewLisener,
                 // kiểm tra việc order một món ăn vào danh sách
                 boolean isSuccess = order(position);
                 if (isSuccess) {
-                    Toast.makeText(getActivity(), "Thêm thành công", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "Thêm thành công", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getActivity(), "Thêm thất bại", Toast.LENGTH_SHORT).show();
                 }

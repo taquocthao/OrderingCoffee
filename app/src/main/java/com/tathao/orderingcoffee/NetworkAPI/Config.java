@@ -1,7 +1,7 @@
 package com.tathao.orderingcoffee.NetworkAPI;
 
 public class Config {
-    private static String http = "http://192.168.0.14:81";
+    private static String http = "http://192.168.1.52:81";
     public static final String urlLogin = http +"/cafe/api/login";
     public static final String urlUserInfor = http + "/cafe/api/user";
     public static final String urlUserUpdate = http + "/cafe/api/account/update";
@@ -12,6 +12,5 @@ public class Config {
     public static final String urlWard = http +"/cafe/api/address/ward/get?district_id=";
     public static final String urlCategoryFoodes = http+ "/cafe/api/product/category/get?shop_id=";
     public static final String urlFoodes = http + "/cafe/api/product/get?category_id=";
-
     public static final String urlAddSaleBill = http+ "/cafe/api/sale_bill/add";
 }

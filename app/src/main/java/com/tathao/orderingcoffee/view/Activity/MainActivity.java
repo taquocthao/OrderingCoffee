@@ -68,12 +68,12 @@ public class MainActivity extends AppCompatActivity
     private ImageView imgUser;
     private TextView tvName, tvMail;
     private Menu nav_menu;
+    private ActionBarDrawerToggle toggle;
 
     private AccessToken accessToken;
     private int typeLogin = 0;
     private LoginStore loginStore;
     private UserDataStore store;
-
 
 
     @Override
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity
         fab = findViewById(R.id.fab);
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
-        final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
 
@@ -135,11 +135,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 if (getFragmentManager().getBackStackEntryCount() >= 2) {
-
                     getFragmentManager().popBackStack(getString(R.string.food_page), FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     getSupportActionBar().setTitle(getString(R.string.category));
                 } else if (getFragmentManager().getBackStackEntryCount() == 1) {
-
                     getFragmentManager().popBackStack(getString(R.string.food_category_page), FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     getSupportActionBar().setTitle(getString(R.string.home));
                     //remove back button
@@ -153,7 +151,6 @@ public class MainActivity extends AppCompatActivity
                 //  Log.d("count", getFragmentManager().getBackStackEntryCount()+"");
             }
         });
-
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         View viewNav = navigationView.getHeaderView(0);
@@ -249,7 +246,6 @@ public class MainActivity extends AppCompatActivity
 
             nav_menu.findItem(R.id.nav_checkin).setVisible(false);
             nav_menu.findItem(R.id.nav_chat).setVisible(false);
-
         }
     }
 
@@ -258,6 +254,20 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (getFragmentManager().getBackStackEntryCount() > 0) {
+            if (getFragmentManager().getBackStackEntryCount() >= 2) {
+                getFragmentManager().popBackStack();
+                getSupportActionBar().setTitle(getString(R.string.category));
+            } else if (getFragmentManager().getBackStackEntryCount() == 1) {
+                getFragmentManager().popBackStack();
+                getSupportActionBar().setTitle(getString(R.string.home));
+                //remove back button
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                // show hamburger button
+                toggle.setDrawerIndicatorEnabled(true);
+                toggle.syncState();
+            }
+//            getFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }

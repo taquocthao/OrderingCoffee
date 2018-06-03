@@ -2,6 +2,8 @@ package com.tathao.orderingcoffee.view.Fragment.OrderHistory;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +25,7 @@ import com.tathao.orderingcoffee.presenter.OrderHistory.OnOrderHistoryViewLisene
 import com.tathao.orderingcoffee.presenter.OrderHistory.OrderHistoryPresenter;
 import com.tathao.orderingcoffee.view.Fragment.HomePage;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +48,6 @@ public class OrderHistory extends Fragment implements View.OnClickListener, AddF
 
         // gọi presenter, yêu cầu lấy danh sách các món đã order từ csdl
         order.getListOrder();
-
 
         return view;
     }
@@ -84,7 +86,11 @@ public class OrderHistory extends Fragment implements View.OnClickListener, AddF
 
     @Override
     public void addFragment(Fragment fragment, String title) {
-        getActivity().getFragmentManager().beginTransaction().replace(R.id.content, fragment).commit();
+//        getActivity().getFragmentManager().beginTransaction().replace(R.id.content, fragment)
+//                .addToBackStack("orderHistory").commit();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(fragment, "homepage").commit();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(title);
     }
     // interface trả về từ presenter -> lấy danh sách các món ăn đã order ->thành công
@@ -92,7 +98,8 @@ public class OrderHistory extends Fragment implements View.OnClickListener, AddF
     public void onGetListOrderSuccess(List<InvoiceDetails> invoiceDetails, long totalPrice) {
         OrderAdapter adapter = new OrderAdapter(invoiceDetails, getActivity().getBaseContext(), this);
         recyclerView.setAdapter(adapter);
-        tvTotalPrice.setText(totalPrice +"");
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
+        tvTotalPrice.setText(numberFormat.format(totalPrice));
     }
     // interface trả về từ presenter -> lấy danh sách các món ăn đã order ->thất bại
     @Override
